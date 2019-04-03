@@ -61,30 +61,33 @@ public class Controller {
 
     //FINISH LATER aka saveScenario
     public void saveScenario(JTable table, File file) {
-        //try {
+        try {
             TableModel model = table.getModel();
-            //FileWriter scenario = new FileWriter(file);
+            FileWriter scenario = new FileWriter(file);
 
             int row_idx = model.getRowCount();
             int column_idx = model.getColumnCount();
 
-            //for (int i = 0; i < column_idx; i++) {
-                //scenario.write(model.getColumnName(i) + "\t");
-            //}
-            //scenario.write("\n");
+            for (int i = 0; i < column_idx; i++) {
+                scenario.write(model.getColumnName(i) + "\t");
+            }
+            scenario.write("\n");
 
             for (int i = 0; i < row_idx; i++) {
                 for (int j = 0; j < column_idx; j++) {
-
-                    //scenario.write(model.getValueAt(i, j).toString());
+                    if (model.getValueAt(i, j)!=null) {
+                        scenario.write(model.getValueAt(i, j).toString());
+                    } else {
+                        scenario.write("null");
+                    }
                     System.out.println(model.getValueAt(i, j));
                 }
-                //scenario.write("\n");
+                scenario.write("\n");
             }
-            //scenario.close();
-        //} catch (IOException ex) {
-           // ex.printStackTrace();
-        //}
+            scenario.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }//saveScenario
 
     public void loadScenario() {
