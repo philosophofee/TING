@@ -27,14 +27,14 @@ public class Statistics extends JPanel implements Serializable {
     private List<Double> scores;
 
     public Statistics() {
-        List<Double> scorez = new ArrayList<>();
-        Random random = new Random();
+        //List<Double> scorez = new ArrayList<>();
+        /*Random random = new Random();
         int maxDataPoints = 40;
         int maxScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
             scorez.add((double) random.nextDouble() * maxScore);
-        }
-        this.scores = scorez;
+        }*/
+        //this.scores = scorez;
     }//Statistics
     
     public Statistics(List<Double> scores) {
