@@ -10,6 +10,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     public MainWindow(Controller controller) {
         this.controller = controller;
+        this.setLocationRelativeTo(null);
         initComponents();
     }//MainWindow
 
@@ -285,13 +286,24 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnSaveScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveScenarioActionPerformed
         controller.pauseAnimation();
-        controller.saveScenario(tblElevators, scenarioFile);
+        FilePicker picker = new FilePicker(null);
+        File toSave = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", true);
+        if (toSave==null) return;
+        String path = toSave.getAbsolutePath();
+        if (!path.endsWith(".esf")) {
+            path = path + ".esf";
+        }
+        controller.saveScenario(tblElevators, new File(path));
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnLoadScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScenarioActionPerformed
-        controller.resetAnimation();
-        tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
-        controller.loadScenario(); //open ui to load scenario file into jTable
+        //controller.resetAnimation();
+        //tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
+        FilePicker picker = new FilePicker(null);
+        File toLoad = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", false);
+        if (toLoad==null) return;
+        controller.loadScenario(tblElevators, toLoad); //open ui to load scenario file into jTable
+        adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
 
     public static void main(String args[]) {
@@ -306,7 +318,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }//main
 
-    private void adjustTableColumns() {
+    public void adjustTableColumns() {
         // adjust column sizes
         TableColumn column = null;
         int columns = tblElevators.getColumnModel().getColumnCount();

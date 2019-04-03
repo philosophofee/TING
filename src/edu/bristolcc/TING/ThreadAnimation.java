@@ -4,7 +4,7 @@ public class ThreadAnimation implements Runnable {
 
     private static final long ANIMATION_TIMEOUT_MS = 500; // half second
     private Controller controller;
-    private int count;
+    public int count;
 
     public ThreadAnimation(Controller controller) {
         this.controller = controller;

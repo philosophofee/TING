@@ -1,5 +1,0 @@
-A	B	C	D	
-4nullnullnull
-null5nullnull
-nullnull6null
-nullnullnull7
