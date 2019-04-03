@@ -5,15 +5,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import static java.lang.Thread.State.NEW;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import static java.lang.Thread.State.TIMED_WAITING;
-import javax.swing.table.TableColumn;
 
 public class Controller {
 
