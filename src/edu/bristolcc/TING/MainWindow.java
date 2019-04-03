@@ -1,7 +1,16 @@
 package edu.bristolcc.TING;
 
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -11,12 +20,22 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow(Controller controller) {
         this.controller = controller;
         this.setLocationRelativeTo(null);
+        
         initComponents();
+        adjustTableColumns();
+        pnlMain.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                // This is only called when the user releases the mouse button.
+                adjustTableColumns();
+            }
+        });
     }//MainWindow
 
     public void update() {
         int value = controller.getCurrentData();
-        javax.swing.table.TableModel model = tblElevators.getModel();
+        
+        TableModel model = tblElevators.getModel();
+        
         model.setValueAt(value, 0/*row*/, 0/*column*/);
         model.setValueAt(value + 1, 1/*row*/, 1/*column*/);
         model.setValueAt(value + 2, 2/*row*/, 2/*column*/);
@@ -36,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
         pnlMain = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblElevators = new javax.swing.JTable();
@@ -56,10 +76,16 @@ public class MainWindow extends javax.swing.JFrame {
         btnLoadScenario = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         btnViewStatistics = new javax.swing.JButton();
+        pnlStats = new edu.bristolcc.TING.Statistics();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TING Elevator Simulation");
 
+        jSplitPane1.setDividerLocation(300);
+
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        tblElevators.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         tblElevators.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -71,19 +97,27 @@ public class MainWindow extends javax.swing.JFrame {
                 "A", "B", "C", "D"
             }
         ));
-        tblElevators.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tblElevators.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblElevators.setEnabled(false);
+        tblElevators.setRowHeight(32);
         jScrollPane1.setViewportView(tblElevators);
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 299, Short.MAX_VALUE)
+            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGap(0, 449, Short.MAX_VALUE)
+            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
         );
+
+        jSplitPane1.setLeftComponent(pnlMain);
 
         btnStartSimulation.setText("Start Simulation");
         btnStartSimulation.addActionListener(new java.awt.event.ActionListener() {
@@ -103,7 +137,7 @@ public class MainWindow extends javax.swing.JFrame {
         pnlSimulation.setLayout(pnlSimulationLayout);
         pnlSimulationLayout.setHorizontalGroup(
             pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSimulationLayout.createSequentialGroup()
+            .addGroup(pnlSimulationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnStartSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
@@ -117,7 +151,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnStartSimulation)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStopSimulation)
-                .addContainerGap(283, Short.MAX_VALUE))
+                .addContainerGap(353, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Modify Simulation", pnlSimulation);
@@ -175,7 +209,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnConfigureGrid)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnResetGrid)
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Update Table", pnlTable);
@@ -212,7 +246,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnSaveScenario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLoadScenario)
-                .addContainerGap(283, Short.MAX_VALUE))
+                .addContainerGap(353, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Change Scenario", pnlScenario);
@@ -224,13 +258,26 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout pnlStatsLayout = new javax.swing.GroupLayout(pnlStats);
+        pnlStats.setLayout(pnlStatsLayout);
+        pnlStatsLayout.setHorizontalGroup(
+            pnlStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnlStatsLayout.setVerticalGroup(
+            pnlStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 353, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnViewStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -238,7 +285,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnViewStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(300, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tbdPaneMain.addTab("View Statistics", jPanel1);
@@ -254,19 +303,17 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(tbdPaneMain)
         );
 
+        jSplitPane1.setRightComponent(pnlTabbedPane);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSplitPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jSplitPane1)
         );
 
         pack();
@@ -298,6 +345,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConfigureGridActionPerformed
 
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
+        adjustTableColumns();
         controller.startAnimation();
     }//GEN-LAST:event_btnStartSimulationActionPerformed
 
@@ -335,7 +383,15 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
 
     private void btnViewStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewStatisticsActionPerformed
-        Statistics.createAndShowGui();
+        //Statistics.createAndShowGui();
+        List<Double> scores = new ArrayList<>();
+        Random random = new Random();
+        int maxDataPoints = 40;
+        int maxScore = 10;
+        for (int i = 0; i < maxDataPoints; i++) {
+            scores.add((double) random.nextDouble() * maxScore);
+        }
+        pnlStats.setScores(scores);
     }//GEN-LAST:event_btnViewStatisticsActionPerformed
 
     public static void main(String args[]) {
@@ -357,11 +413,23 @@ public class MainWindow extends javax.swing.JFrame {
 
         for (int idx = 0; idx < columns; ++idx) {
             column = tblElevators.getColumnModel().getColumn(idx);
-            column.setPreferredWidth(25/*pixels*/);
-            column.setWidth(25/*pixels*/);
+            column.setPreferredWidth(pnlMain.getWidth() / columns/*pixels*/);
+            column.setWidth(pnlMain.getWidth() / columns/*pixels*/);
+        }
+        
+        tblElevators.setRowHeight(pnlMain.getHeight()/tblElevators.getRowCount()-5);
+        tblElevators.getTableHeader().setReorderingAllowed(false);
+        
+        //this looks pretty
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i=0; i<tblElevators.getColumnCount(); i++) {
+            tblElevators.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
     }//adjustTableColumns
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfigureGrid;
     private javax.swing.JButton btnLoadScenario;
@@ -372,11 +440,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnViewStatistics;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel lblElevators;
     private javax.swing.JLabel lblFloors;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlScenario;
     private javax.swing.JPanel pnlSimulation;
+    private edu.bristolcc.TING.Statistics pnlStats;
     private javax.swing.JPanel pnlTabbedPane;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JTabbedPane tbdPaneMain;

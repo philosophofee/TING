@@ -2,24 +2,23 @@ package edu.bristolcc.TING;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Statistics extends JPanel {
+public class Statistics extends JPanel implements Serializable {
 
     private final int padding = 25;
     private final int labelPadding = 25;
-    private final Color lineColor = new Color(44, 102, 230, 180);
+    private final Color lineColor = new Color(230, 102, 44, 180);
     private final Color pointColor = new Color(100, 100, 100, 180);
     private final Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
@@ -27,6 +26,17 @@ public class Statistics extends JPanel {
     private final int numberYDivisions = 10;
     private List<Double> scores;
 
+    public Statistics() {
+        List<Double> scorez = new ArrayList<>();
+        Random random = new Random();
+        int maxDataPoints = 40;
+        int maxScore = 10;
+        for (int i = 0; i < maxDataPoints; i++) {
+            scorez.add((double) random.nextDouble() * maxScore);
+        }
+        this.scores = scorez;
+    }//Statistics
+    
     public Statistics(List<Double> scores) {
         this.scores = scores;
     }//Statistics
@@ -142,21 +152,4 @@ public class Statistics extends JPanel {
         return scores;
     }//getScores
 
-    public static void createAndShowGui() {
-        List<Double> scores = new ArrayList<>();
-        Random random = new Random();
-        int maxDataPoints = 40;
-        int maxScore = 10;
-        for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-        }
-        Statistics mainPanel = new Statistics(scores);
-        mainPanel.setPreferredSize(new Dimension(400, 300));
-        JFrame frame = new JFrame("View Statistics");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(mainPanel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }//createAndShowGui
 }//Class Statistics
