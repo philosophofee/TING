@@ -15,7 +15,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private Controller controller;
     public static File scenarioFile = new File("scenario.txt");
-    private Object pnlStats;
 
     public MainWindow(Controller controller) {
         this.controller = controller;
@@ -33,14 +32,43 @@ public class MainWindow extends javax.swing.JFrame {
 
     public void update() {
         int value = controller.getCurrentData();
-        
-        TableModel model = tblElevators.getModel();
-        
-        model.setValueAt(value, 0/*row*/, 0/*column*/);
-        model.setValueAt(value + 1, 1/*row*/, 1/*column*/);
-        model.setValueAt(value + 2, 2/*row*/, 2/*column*/);
-        model.setValueAt(value + 3, 3/*row*/, 3/*column*/);
 
+        TableModel model = tblElevators.getModel();
+
+        //for uniform visitors
+        int firstRow = 0;
+        int firstColumn = 0;
+
+        //for random amount of visitors but inconsistent
+        //int firstRow = new Random().nextInt(maxRows);
+        //int firstColumn = new Random().nextInt(maxColumns);
+        
+        int maxRows = model.getRowCount();
+        int maxColumns = model.getColumnCount();
+
+        try {
+
+            for (; firstRow < maxRows; ++firstRow) {
+                for (; firstColumn < maxColumns; ++firstColumn) {
+                    if (firstRow == firstColumn) {
+                        model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
+                    }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
+
+        //updates view statistics graph when simulation is running
+        List<Double> scores = new ArrayList<>();
+        int maxDataPoints = 40;
+        int maxScore = 10;
+        for (int i = 0; i < maxDataPoints; i++) {
+            scores.add((double)(value));
+ 
+        }
+        pnlStats.setScores(scores);
+ 
     }//update
 
     public Controller getController() {
@@ -75,7 +103,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnSaveScenario = new javax.swing.JButton();
         btnLoadScenario = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        btnViewStatistics = new javax.swing.JButton();
+        pnlStats = new edu.bristolcc.TING.Statistics();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TING Elevator Simulation");
@@ -250,12 +278,16 @@ public class MainWindow extends javax.swing.JFrame {
 
         tbdPaneMain.addTab("Change Scenario", pnlScenario);
 
-        btnViewStatistics.setText("View Statistics");
-        btnViewStatistics.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewStatisticsActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout pnlStatsLayout = new javax.swing.GroupLayout(pnlStats);
+        pnlStats.setLayout(pnlStatsLayout);
+        pnlStatsLayout.setHorizontalGroup(
+            pnlStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnlStatsLayout.setVerticalGroup(
+            pnlStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 399, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -263,15 +295,15 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnViewStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addComponent(pnlStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnViewStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(372, Short.MAX_VALUE))
+                .addComponent(pnlStats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tbdPaneMain.addTab("View Statistics", jPanel1);
@@ -336,6 +368,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void btnResetGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetGridActionPerformed
         controller.resetAnimation();
         tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
+        List<Double> scores = new ArrayList<>();
+        //resets view statistics graph
+        pnlStats.setScores(scores);
+        
     }//GEN-LAST:event_btnResetGridActionPerformed
 
     private void btnStopSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopSimulationActionPerformed
@@ -365,18 +401,6 @@ public class MainWindow extends javax.swing.JFrame {
         controller.loadScenario(tblElevators, toLoad); //open ui to load scenario file into jTable
         adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
-
-    private void btnViewStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewStatisticsActionPerformed
-        //Statistics.createAndShowGui();
-        List<Double> scores = new ArrayList<>();
-        Random random = new Random();
-        int maxDataPoints = 40;
-        int maxScore = 10;
-        for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-        }
-        pnlStats.setScores(scores);
-    }//GEN-LAST:event_btnViewStatisticsActionPerformed
 
     public static void main(String args[]) {
         Controller controller = new Controller();
@@ -421,7 +445,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveScenario;
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;
-    private javax.swing.JButton btnViewStatistics;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -430,6 +453,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlScenario;
     private javax.swing.JPanel pnlSimulation;
+    private edu.bristolcc.TING.Statistics pnlStats;
     private javax.swing.JPanel pnlTabbedPane;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JTabbedPane tbdPaneMain;
