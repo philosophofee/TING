@@ -55,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnSaveScenario = new javax.swing.JButton();
         btnLoadScenario = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        btnViewStatistics = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TING Elevator Simulation");
@@ -116,7 +117,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnStartSimulation)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStopSimulation)
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addContainerGap(283, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Modify Simulation", pnlSimulation);
@@ -174,7 +175,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnConfigureGrid)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnResetGrid)
-                .addContainerGap(214, Short.MAX_VALUE))
+                .addContainerGap(226, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Update Table", pnlTable);
@@ -211,20 +212,33 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnSaveScenario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLoadScenario)
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addContainerGap(283, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Change Scenario", pnlScenario);
+
+        btnViewStatistics.setText("View Statistics");
+        btnViewStatistics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewStatisticsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 444, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnViewStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 339, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnViewStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(300, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("View Statistics", jPanel1);
@@ -233,7 +247,7 @@ public class MainWindow extends javax.swing.JFrame {
         pnlTabbedPane.setLayout(pnlTabbedPaneLayout);
         pnlTabbedPaneLayout.setHorizontalGroup(
             pnlTabbedPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tbdPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(tbdPaneMain, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         pnlTabbedPaneLayout.setVerticalGroup(
             pnlTabbedPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +314,9 @@ public class MainWindow extends javax.swing.JFrame {
         controller.pauseAnimation();
         FilePicker picker = new FilePicker(null);
         File toSave = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", true);
-        if (toSave==null) return;
+        if (toSave == null) {
+            return;
+        }
         String path = toSave.getAbsolutePath();
         if (!path.endsWith(".esf")) {
             path = path + ".esf";
@@ -309,14 +325,18 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnLoadScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScenarioActionPerformed
-        //controller.resetAnimation();
-        //tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
         FilePicker picker = new FilePicker(null);
         File toLoad = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", false);
-        if (toLoad==null) return;
+        if (toLoad == null) {
+            return;
+        }
         controller.loadScenario(tblElevators, toLoad); //open ui to load scenario file into jTable
         adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
+
+    private void btnViewStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewStatisticsActionPerformed
+        Statistics.createAndShowGui();
+    }//GEN-LAST:event_btnViewStatisticsActionPerformed
 
     public static void main(String args[]) {
         Controller controller = new Controller();
@@ -349,6 +369,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveScenario;
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;
+    private javax.swing.JButton btnViewStatistics;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblElevators;

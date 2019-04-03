@@ -29,7 +29,7 @@ public class Controller {
     public void startAnimation() {
         simulationStatus = true;
 
-        if ((animationThread.getCount() == 0 && th.getState().equals(TIMED_WAITING) || animationThread.getCount() != 0) && (!th.getState().equals(NEW)) ) {
+        if ((animationThread.getCount() == 0 && th.getState().equals(TIMED_WAITING) || animationThread.getCount() != 0) && (!th.getState().equals(NEW))) {
             th.resume();
             //System.out.println("resume after reset: " + th.getState());
         } else {
@@ -70,7 +70,7 @@ public class Controller {
 
             //create the data output stream for scenario
             DataOutputStream scenario = new DataOutputStream(new FileOutputStream(file));
-            
+
             //write out the animation thread counter
             int count = animationThread.getCount();
             scenario.writeInt(count);
@@ -84,7 +84,7 @@ public class Controller {
             //for each row and each column...
             for (int i = 0; i < row_idx; i++) {
                 for (int j = 0; j < column_idx; j++) {
-                    if (model.getValueAt(i, j)!=null) { //if the value in the box is not null
+                    if (model.getValueAt(i, j) != null) { //if the value in the box is not null
                         //write integer of the contents of each cell
                         scenario.writeInt(Integer.parseInt(model.getValueAt(i, j).toString()));
                     } else {
@@ -105,14 +105,14 @@ public class Controller {
         try {
             //get file the user loaded in and turn it into an inputstream
             DataInputStream scenario = new DataInputStream(new FileInputStream(file));
-            
+
             //set the animation count from the first integer in the data
             animationThread.setCount(scenario.readInt());
-            
+
             //get row and column informatiom from scenario
             int row_idx = scenario.readInt();
             int column_idx = scenario.readInt();
-            
+
             //the following code is effectively copied from MainWindow.btnConfigureGridActionPerformed()
             //which will automatically configure the grid based on the file loaded
             try {
@@ -129,7 +129,7 @@ public class Controller {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            
+
             //now that we have a new table, let's create a new object to reference later
             TableModel model = table.getModel();
 
@@ -138,21 +138,20 @@ public class Controller {
                 for (int j = 0; j < column_idx; j++) {
                     //read integer for cell from scenario data
                     int toWorkWith = scenario.readInt();
-                    
+
                     //if the data is not 0xFFFFFFFF (aka what we effectively saved as null)
-                    if (toWorkWith!=-1) {
+                    if (toWorkWith != -1) {
                         model.setValueAt(toWorkWith, i, j);
                         //System.out.println("set value " + toWorkWith + " at i:" + i + ", j:" + j);
                     }
                 }
             }
             //make sure we set the simulation status to yes, we have one going on
-            simulationStatus=true;
+            simulationStatus = true;
             //job well done
             scenario.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }//loadScenario
-
 }//class ControllerDemo

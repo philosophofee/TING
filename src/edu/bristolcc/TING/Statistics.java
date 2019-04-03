@@ -14,25 +14,22 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class Statistics extends JPanel {
 
-    private int width = 800;
-    private int heigth = 400;
-    private int padding = 25;
-    private int labelPadding = 25;
-    private Color lineColor = new Color(44, 102, 230, 180);
-    private Color pointColor = new Color(100, 100, 100, 180);
-    private Color gridColor = new Color(200, 200, 200, 200);
+    private final int padding = 25;
+    private final int labelPadding = 25;
+    private final Color lineColor = new Color(44, 102, 230, 180);
+    private final Color pointColor = new Color(100, 100, 100, 180);
+    private final Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
-    private int pointWidth = 4;
-    private int numberYDivisions = 10;
+    private final int pointWidth = 4;
+    private final int numberYDivisions = 10;
     private List<Double> scores;
 
     public Statistics(List<Double> scores) {
         this.scores = scores;
-    }
+    }//Statistics
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -117,7 +114,7 @@ public class Statistics extends JPanel {
             int ovalH = pointWidth;
             g2.fillOval(x, y, ovalW, ovalH);
         }
-    }
+    }//paintComponent
 
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
@@ -125,7 +122,7 @@ public class Statistics extends JPanel {
             minScore = Math.min(minScore, score);
         }
         return minScore;
-    }
+    }//getMinScore
 
     private double getMaxScore() {
         double maxScore = Double.MIN_VALUE;
@@ -133,42 +130,33 @@ public class Statistics extends JPanel {
             maxScore = Math.max(maxScore, score);
         }
         return maxScore;
-    }
+    }//getMaxScore
 
     public void setScores(List<Double> scores) {
         this.scores = scores;
         invalidate();
         this.repaint();
-    }
+    }//setScores
 
     public List<Double> getScores() {
         return scores;
-    }
-    
-    private static void createAndShowGui() {
+    }//getScores
+
+    public static void createAndShowGui() {
         List<Double> scores = new ArrayList<>();
         Random random = new Random();
         int maxDataPoints = 40;
         int maxScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
             scores.add((double) random.nextDouble() * maxScore);
-//            scores.add((double) i);
         }
         Statistics mainPanel = new Statistics(scores);
-        mainPanel.setPreferredSize(new Dimension(800, 600));
-        JFrame frame = new JFrame("DrawGraph");
+        mainPanel.setPreferredSize(new Dimension(400, 300));
+        JFrame frame = new JFrame("View Statistics");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(mainPanel);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-    
-    public static void main(String[] args) {
-      SwingUtilities.invokeLater(new Runnable() {
-         public void run() {
-            createAndShowGui();
-         }
-      });
-   }
-}
+    }//createAndShowGui
+}//Class Statistics
