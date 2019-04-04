@@ -27,8 +27,7 @@ public class Statistics extends JPanel implements Serializable {
     private List<Double> scores;
 
     public Statistics() {
-        List<Double> scorez = new ArrayList<>();
-        this.scores = scorez;
+        this.scores = new ArrayList<>();
     }//Statistics
     
     public Statistics(List<Double> scores) {

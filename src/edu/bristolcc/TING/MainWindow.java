@@ -16,11 +16,14 @@ public class MainWindow extends javax.swing.JFrame {
     private Controller controller;
     public static File scenarioFile = new File("scenario.txt");
 
+    private static List<Double> scores = new ArrayList<>();
+    
     public MainWindow(Controller controller) {
         this.controller = controller;
         this.setLocationRelativeTo(null);
         
         initComponents();
+        generateNewTable(4,4);
         adjustTableColumns();
         pnlMain.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -30,30 +33,22 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }//MainWindow
 
+    
     public void update() {
         int value = controller.getCurrentData();
 
         TableModel model = tblElevators.getModel();
 
-        //for uniform visitors
-        //int firstRow = 0;
-        //int firstColumn = 0;
-
-        //for random amount of visitors but inconsistent
-        //int firstRow = new Random().nextInt(maxRows);
-        //int firstColumn = new Random().nextInt(maxColumns);
-        
         int maxRows = model.getRowCount();
         int maxColumns = model.getColumnCount();
 
         try {
-
             for (int firstRow=0; firstRow < maxRows; ++firstRow) {
-                
                 for (int firstColumn=0; firstColumn < maxColumns; ++firstColumn) {
-                    if (firstRow == firstColumn) {
+                    //if (firstRow == firstColumn) {
                         model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
-                    }
+                        scores.add((double)(value));
+                    //}
                 }
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -61,13 +56,6 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         //updates view statistics graph when simulation is running
-        List<Double> scores = new ArrayList<>();
-        int maxDataPoints = 40;
-        int maxScore = 10;
-        for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double)(value));
- 
-        }
         pnlStats.setScores(scores);
  
     }//update
@@ -338,29 +326,33 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
         controller.resetAnimation();
-        try {
-            int floors = Integer.parseInt(txtFloors.getText());
-            int elevators = Integer.parseInt(txtElevators.getText());
+        generateNewTable(Integer.parseInt(txtFloors.getText()), Integer.parseInt(txtElevators.getText()));
+    }//GEN-LAST:event_btnConfigureGridActionPerformed
 
+    public void generateNewTable(int elevators, int floors) {
+        try {
+            int columnCount = elevators+1;
+            
             // configure column names
-            String[] columnNames = new String[elevators];
+            String[] columnNames = new String[columnCount];
             char[] dummy = {'A'};
-            for (int idx = 0; idx < elevators; ++idx) {
-                dummy[0] = (char) (idx + 'A');
+            columnNames[0] = "Floor";
+            for (int idx = 1; idx < columnCount; ++idx) {
+                dummy[0] = (char) (idx-1 + 'A');
                 columnNames[idx] = new String(dummy);
             }
             // populate 2-dimensional array of data
-            Object[][] tableContent = new Object[floors/*rows*/][elevators/*columns*/];
+            Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
             tblElevators.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
 
             adjustTableColumns();
         } catch (NumberFormatException ex) {
-            txtFloors.setText("INVALID!");
-            txtElevators.setText("INVALID!");
+            txtFloors.setText("NaN");
+            txtElevators.setText("NaN");
             tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
         }
-    }//GEN-LAST:event_btnConfigureGridActionPerformed
-
+    }
+    
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
         adjustTableColumns();
         controller.startAnimation();

@@ -115,21 +115,21 @@ public class Controller {
 
             //the following code is effectively copied from MainWindow.btnConfigureGridActionPerformed()
             //which will automatically configure the grid based on the file loaded
-            try {
-                // configure column names
-                String[] columnNames = new String[column_idx];
-                char[] dummy = {'A'};
-                for (int idx = 0; idx < column_idx; ++idx) {
-                    dummy[0] = (char) (idx + 'A');
-                    columnNames[idx] = new String(dummy);
-                }
-                // populate 2-dimensional array of data
-                Object[][] tableContent = new Object[row_idx/*rows*/][column_idx/*columns*/];
-                table.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
+            //try {
+            //    // configure column names
+            //    String[] columnNames = new String[column_idx];
+            //    char[] dummy = {'A'};
+            //    for (int idx = 0; idx < column_idx; ++idx) {
+            //        dummy[0] = (char) (idx + 'A');
+            //        columnNames[idx] = new String(dummy);
+            //    }
+            //    // populate 2-dimensional array of data
+            //    Object[][] tableContent = new Object[row_idx/*rows*/][column_idx/*columns*/];
+            //    table.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
+            //} catch (Exception ex) {
+            //    ex.printStackTrace();
+            //}
+            window.generateNewTable(row_idx, column_idx-1);
             //now that we have a new table, let's create a new object to reference later
             TableModel model = table.getModel();
 
