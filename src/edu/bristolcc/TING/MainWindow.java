@@ -33,7 +33,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }//MainWindow
 
-    
+    public int TESTVAR = 0;
+    public double TESTVAR2 = 0;
+    public boolean GOINGUP = false;
     public void update() {
         int value = controller.getCurrentData();
 
@@ -46,15 +48,31 @@ public class MainWindow extends javax.swing.JFrame {
             for (int firstRow=0; firstRow < maxRows; ++firstRow) {
                 for (int firstColumn=0; firstColumn < maxColumns; ++firstColumn) {
                     //if (firstRow == firstColumn) {
-                        model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
-                        scores.add((double)(value));
+                        //model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
+                        //scores.add((double)(value));
+                        model.setValueAt(null, firstRow, firstColumn);
                     //}
                 }
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
             ex.printStackTrace();
         }
-
+        if (GOINGUP==false) {
+            TESTVAR++;
+            TESTVAR2=(maxColumns/2)+(Math.sin(TESTVAR*10)*4);
+        }
+        if (GOINGUP==true) {
+            TESTVAR--;
+            TESTVAR2=(maxColumns/2)+(Math.sin(TESTVAR*10)*4);
+        }
+        if (TESTVAR==maxRows-1 && GOINGUP==false) {
+            GOINGUP=true;
+        }
+        if (TESTVAR==0 && GOINGUP==true) {
+            GOINGUP=false;
+        }
+        
+        model.setValueAt(1, TESTVAR, (int)TESTVAR2);
         //updates view statistics graph when simulation is running
         pnlStats.setScores(scores);
  
@@ -81,6 +99,8 @@ public class MainWindow extends javax.swing.JFrame {
         pnlSimulation = new javax.swing.JPanel();
         btnStartSimulation = new javax.swing.JButton();
         btnStopSimulation = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        tfFPS = new javax.swing.JTextField();
         pnlTable = new javax.swing.JPanel();
         txtFloors = new javax.swing.JTextField();
         lblFloors = new javax.swing.JLabel();
@@ -149,6 +169,11 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Animation Speed (ms):");
+        jLabel1.setToolTipText("");
+
+        tfFPS.setText("500");
+
         javax.swing.GroupLayout pnlSimulationLayout = new javax.swing.GroupLayout(pnlSimulation);
         pnlSimulation.setLayout(pnlSimulationLayout);
         pnlSimulationLayout.setHorizontalGroup(
@@ -157,7 +182,12 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnStartSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
-                    .addComponent(btnStopSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnStopSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlSimulationLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlSimulationLayout.setVerticalGroup(
@@ -167,7 +197,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(btnStartSimulation)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStopSimulation)
-                .addContainerGap(353, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(315, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Modify Simulation", pnlSimulation);
@@ -343,8 +377,9 @@ public class MainWindow extends javax.swing.JFrame {
             }
             // populate 2-dimensional array of data
             Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
+            
             tblElevators.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-
+            
             adjustTableColumns();
         } catch (NumberFormatException ex) {
             txtFloors.setText("NaN");
@@ -355,6 +390,7 @@ public class MainWindow extends javax.swing.JFrame {
     
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
         adjustTableColumns();
+        controller.animationThread.setSpeed(Long.parseLong(tfFPS.getText()));
         controller.startAnimation();
     }//GEN-LAST:event_btnStartSimulationActionPerformed
 
@@ -438,6 +474,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveScenario;
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -451,6 +488,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel pnlTable;
     private javax.swing.JTabbedPane tbdPaneMain;
     private javax.swing.JTable tblElevators;
+    private javax.swing.JTextField tfFPS;
     private javax.swing.JTextField txtElevators;
     private javax.swing.JTextField txtFloors;
     // End of variables declaration//GEN-END:variables

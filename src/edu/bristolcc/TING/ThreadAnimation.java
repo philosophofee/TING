@@ -2,7 +2,7 @@ package edu.bristolcc.TING;
 
 public class ThreadAnimation implements Runnable {
 
-    private static final long ANIMATION_TIMEOUT_MS = 500; // half second
+    private static long ANIMATION_TIMEOUT_MS = 500; // half second
     private Controller controller;
     public int count;
 
@@ -10,6 +10,10 @@ public class ThreadAnimation implements Runnable {
         this.controller = controller;
     }//ThreadAnimation
 
+    public void setSpeed(long speed) {
+        this.ANIMATION_TIMEOUT_MS = speed;
+    }
+    
     @Override
     public void run() {
 
