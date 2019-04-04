@@ -36,8 +36,8 @@ public class MainWindow extends javax.swing.JFrame {
         TableModel model = tblElevators.getModel();
 
         //for uniform visitors
-        int firstRow = 0;
-        int firstColumn = 0;
+        //int firstRow = 0;
+        //int firstColumn = 0;
 
         //for random amount of visitors but inconsistent
         //int firstRow = new Random().nextInt(maxRows);
@@ -48,8 +48,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         try {
 
-            for (; firstRow < maxRows; ++firstRow) {
-                for (; firstColumn < maxColumns; ++firstColumn) {
+            for (int firstRow=0; firstRow < maxRows; ++firstRow) {
+                
+                for (int firstColumn=0; firstColumn < maxColumns; ++firstColumn) {
                     if (firstRow == firstColumn) {
                         model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
                     }
