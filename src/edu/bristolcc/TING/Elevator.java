@@ -50,7 +50,7 @@ public class Elevator
         scores.add((double) amount);
         pnlStats.setScores(scores);
     }//moveElevator
-
+    
     //function to stop elevator and makes a call to add a visitor
     public void stopElevator() {
         controller.pauseAnimation();
