@@ -15,12 +15,6 @@ public class MainWindow extends javax.swing.JFrame {
     private Controller controller;
     public static File scenarioFile = new File("scenario.txt");
 
-    public int TESTVAR = 0;
-    public boolean GOINGUP = false;
-    public int amount = 0;
-    private static List<Double> scores = new ArrayList<>();
-    private static List<Integer> columns = new ArrayList<>();
-
     public MainWindow(Controller controller) {
         this.controller = controller;
         this.setLocationRelativeTo(null);
@@ -36,99 +30,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }//MainWindow
 
-    public void getColumnIndices() {
-        TableModel model = tblElevators.getModel();
-        int maxColumns = model.getColumnCount();
-        for (int idx = 0; idx < maxColumns; ++idx) {
-            columns.add(idx);
-        }
-    }//getColumnIndices
-
     public void update() {
-        moveElevator();
+        controller.moveElevator(tblElevators.getModel(), pnlStats);
     }//update
-
-    //function for moving elevator up and down
-    public void moveElevator() {
-        TableModel model = tblElevators.getModel();
-        int maxRows = model.getRowCount();
-
-        for (int firstRow = 0; firstRow < maxRows; ++firstRow) {
-            model.setValueAt(null, firstRow, 1);
-        }
-
-        if (GOINGUP == false) {
-            if (TESTVAR < maxRows - 1) {
-                TESTVAR++;
-            }
-        }
-        if (GOINGUP == true) {
-            if (TESTVAR > 0) {
-                TESTVAR--;
-            }
-        }
-        if (TESTVAR == maxRows - 1 && GOINGUP == false) {
-            GOINGUP = true;
-        }
-        if (TESTVAR == 0 && GOINGUP == true) {
-            GOINGUP = false;
-        }
-
-        model.setValueAt(amount, TESTVAR, 1);
-
-        //adds amount of visitors to arraylist and updates view statistics graph when simulation is running
-        scores.add((double) amount);
-        pnlStats.setScores(scores);
-    }//moveElevator
-
-    //function to stop elevator and makes a call to add a visitor
-    public void stopElevator() {
-        controller.pauseAnimation();
-
-    }//stopElevator
-
-    public void addVisitorToElevator(TableModel model) {
-        try {
-            try {
-                if (amount < 10) {
-                    controller.pauseAnimation();
-                    amount = (int) model.getValueAt(TESTVAR, 1);
-                    ++amount;
-
-                    model.setValueAt(amount, TESTVAR, 1);
-
-                    controller.startAnimation();
-                }
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                controller.startAnimation();
-                amount = (int) model.getValueAt(TESTVAR, 1);
-            }
-        } catch (NullPointerException ex) {
-            controller.startAnimation();
-        }
-    }//addVisitorToElevator
-
-    public void removeVisitorFromElevator(TableModel model) {
-        try {
-            try {
-                if (amount > 0) {
-                    controller.pauseAnimation();
-                    amount = (int) model.getValueAt(TESTVAR, 1);
-                    --amount;
-
-                    model.setValueAt(amount, TESTVAR, 1);
-
-                    controller.startAnimation();
-                }
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                controller.startAnimation();
-                amount = (int) model.getValueAt(TESTVAR, 1);
-            }
-        } catch (NullPointerException ex) {
-            controller.startAnimation();
-        }
-
-    }//removeVisitorToElevator
 
     public Controller getController() {
         return controller;
@@ -436,6 +340,7 @@ public class MainWindow extends javax.swing.JFrame {
         try {
             generateNewTable((Integer.parseInt(txtElevators.getText())), (Integer.parseInt(txtFloors.getText())));
             controller.resetAnimation();
+            pnlStats.setScores(null);
         } catch (NumberFormatException ex) {
             controller.pauseAnimation();
             txtFloors.setText("NaN");
@@ -461,7 +366,7 @@ public class MainWindow extends javax.swing.JFrame {
         tblElevators.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
 
         adjustTableColumns();
-        getColumnIndices();
+        controller.getColumnIndices(tblElevators.getModel());
     }//generateNewTable
 
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
@@ -476,7 +381,6 @@ public class MainWindow extends javax.swing.JFrame {
         List<Double> scores = new ArrayList<>();
         //resets view statistics graph
         pnlStats.setScores(scores);
-
     }//GEN-LAST:event_btnResetGridActionPerformed
 
     private void btnStopSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopSimulationActionPerformed
@@ -501,23 +405,23 @@ public class MainWindow extends javax.swing.JFrame {
         controller.pauseAnimation();
         FilePicker picker = new FilePicker(null);
         File toLoad = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", false);
-
         if (toLoad == null) {
             return;
         }
-
         controller.loadScenario(tblElevators, toLoad); //open ui to load scenario file into jTable
         adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
-
+    
     private void btnAddVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVisitorActionPerformed
         TableModel model = tblElevators.getModel();
-        addVisitorToElevator(model);
+        controller.addVisitorToElevator(model);
+        System.out.println("test button add");
     }//GEN-LAST:event_btnAddVisitorActionPerformed
 
     private void btnRemoveVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveVisitorActionPerformed
         TableModel model = tblElevators.getModel();
-        removeVisitorFromElevator(model);
+        controller.removeVisitorFromElevator(model);
+        System.out.println("test button remove");
     }//GEN-LAST:event_btnRemoveVisitorActionPerformed
 
     public static void main(String args[]) {
@@ -557,12 +461,11 @@ public class MainWindow extends javax.swing.JFrame {
         for (int jdx = 0; jdx < tblElevators.getRowCount(); ++jdx) {
             for (int kdx = 0; kdx < tblElevators.getColumnCount(); ++kdx) {
                 if (tblElevators.getValueAt(jdx, kdx) != null) {
-                    amount = (int) tblElevators.getValueAt(jdx, kdx);//kdx is going to be an issue once we have multiple elevators
+                    controller.setAmount((int) tblElevators.getValueAt(jdx, kdx));//kdx is going to be an issue once we have multiple elevators
                 }
             }
         }
     }//adjustTableColumns
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddVisitor;

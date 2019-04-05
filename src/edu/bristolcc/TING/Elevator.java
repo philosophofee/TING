@@ -1,32 +1,72 @@
 package edu.bristolcc.TING;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.TableModel;
+
 public class Elevator 
 {
-    public int ELEVATOR_CAPACITY;
-    public int DX; //Elevator ID
-    public int DY; //Floor ID
+    private Controller controller;
     
-    public Elevator(int capacity, int identifier) {
-        this.ELEVATOR_CAPACITY = capacity; //number of visitors allowed in elevator
-        this.DX = identifier; //A, B, C, D...
-    }
+    public int TESTVAR = 0;
+    public boolean GOINGUP = false;
+    public int amount = 0;
+    private static List<Double> scores = new ArrayList<>();
+    private static List<Integer> columns = new ArrayList<>();
     
-    public int getCapacity() {
-        return ELEVATOR_CAPACITY;
-    }
+    public Elevator(Controller controller){
+        this.controller = controller;
+    }//Elevator
     
-    public int getFloor() {
-        return DY; //Floor ID
-    }
+    //function for moving elevator up and down
+    public void moveElevator(TableModel model, Statistics pnlStats) {
+        
+        int maxRows = model.getRowCount();
+
+        for (int firstRow = 0; firstRow < maxRows; ++firstRow) {
+            model.setValueAt(null, firstRow, 1);
+        }
+
+        if (GOINGUP == false) {
+            if (TESTVAR < maxRows - 1) {
+                TESTVAR++;
+            }
+        }
+        if (GOINGUP == true) {
+            if (TESTVAR > 0) {
+                TESTVAR--;
+            }
+        }
+        if (TESTVAR == maxRows - 1 && GOINGUP == false) {
+            GOINGUP = true;
+        }
+        if (TESTVAR == 0 && GOINGUP == true) {
+            GOINGUP = false;
+        }
+
+        model.setValueAt(amount, TESTVAR, 1);
+
+        //adds amount of visitors to arraylist and updates view statistics graph when simulation is running
+        scores.add((double) amount);
+        pnlStats.setScores(scores);
+    }//moveElevator
+
+    //function to stop elevator and makes a call to add a visitor
+    public void stopElevator() {
+        controller.pauseAnimation();
+
+    }//stopElevator
     
-    public void moveMePlease(int where) {
-        this.DY+=where; //move elevator one space vertically, either up or down.
-        //theoretically you could make this 5 and your elevator would warp
-        //cool
-    }
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }//setAmount
     
+    public int getAmount() {
+        return amount;
+    }//getAmount
     
-    
-    
+    public int getTESTVAR() {
+        return TESTVAR;
+    }//getTESTVAR
     
 }//Class Elevator

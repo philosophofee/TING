@@ -13,7 +13,7 @@ public class ElevatorBank
     
     public void initiateMePlease(int elevatorCount) {
         for (int i=0; i<ELEVATOR_COUNT; i++) {
-            MY_ELEVATORS.add(new Elevator(8, i));
+            //MY_ELEVATORS.add(new Elevator(8, i));
         }
     }
     public void tick() {
