@@ -172,7 +172,9 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tfFPS" min="-2" pref="73" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnStopElevator" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnAddVisitor" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="btnRemoveVisitor" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -191,9 +193,10 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="tfFPS" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnStopElevator" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnAddVisitor" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnRemoveVisitor" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="312" max="32767" attributes="0"/>
+                              <EmptySpace pref="316" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -226,12 +229,20 @@
                         <Property name="text" type="java.lang.String" value="500"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnStopElevator">
+                    <Component class="javax.swing.JButton" name="btnAddVisitor">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Stop Elevator &amp; Add Visitor"/>
+                        <Property name="text" type="java.lang.String" value="Add Visitor"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStopElevatorActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddVisitorActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btnRemoveVisitor">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Remove Visitor"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveVisitorActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

@@ -3,7 +3,6 @@ package edu.bristolcc.TING;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
@@ -75,10 +74,7 @@ public class MainWindow extends javax.swing.JFrame {
             GOINGUP = false;
         }
 
-        //amount = (int)model.getValueAt(TESTVAR, 1);
-        //for(int idx = 0; idx < columns.size(); ++idx){
         model.setValueAt(amount, TESTVAR, 1);
-        //}
 
         //adds amount of visitors to arraylist and updates view statistics graph when simulation is running
         scores.add((double) amount);
@@ -89,29 +85,50 @@ public class MainWindow extends javax.swing.JFrame {
     public void stopElevator() {
         controller.pauseAnimation();
 
-        TableModel model = tblElevators.getModel();
-        addVisitorToElevator(model);
     }//stopElevator
 
     public void addVisitorToElevator(TableModel model) {
         try {
-            try{
-            amount = (int) model.getValueAt(TESTVAR, 1);
-            ++amount;
+            try {
+                if (amount < 10) {
+                    controller.pauseAnimation();
+                    amount = (int) model.getValueAt(TESTVAR, 1);
+                    ++amount;
 
-            model.setValueAt(amount, TESTVAR, 1);
+                    model.setValueAt(amount, TESTVAR, 1);
 
-            controller.startAnimation();
-            }catch(ArrayIndexOutOfBoundsException ex){
+                    controller.startAnimation();
+                }
+            } catch (ArrayIndexOutOfBoundsException ex) {
                 controller.startAnimation();
                 amount = (int) model.getValueAt(TESTVAR, 1);
-                ++amount;
-                model.setValueAt(amount, TESTVAR, 1);
             }
         } catch (NullPointerException ex) {
             controller.startAnimation();
         }
     }//addVisitorToElevator
+
+    public void removeVisitorFromElevator(TableModel model) {
+        try {
+            try {
+                if (amount > 0) {
+                    controller.pauseAnimation();
+                    amount = (int) model.getValueAt(TESTVAR, 1);
+                    --amount;
+
+                    model.setValueAt(amount, TESTVAR, 1);
+
+                    controller.startAnimation();
+                }
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                controller.startAnimation();
+                amount = (int) model.getValueAt(TESTVAR, 1);
+            }
+        } catch (NullPointerException ex) {
+            controller.startAnimation();
+        }
+
+    }//removeVisitorToElevator
 
     public Controller getController() {
         return controller;
@@ -136,7 +153,8 @@ public class MainWindow extends javax.swing.JFrame {
         btnStopSimulation = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         tfFPS = new javax.swing.JTextField();
-        btnStopElevator = new javax.swing.JButton();
+        btnAddVisitor = new javax.swing.JButton();
+        btnRemoveVisitor = new javax.swing.JButton();
         pnlTable = new javax.swing.JPanel();
         txtFloors = new javax.swing.JTextField();
         lblFloors = new javax.swing.JLabel();
@@ -210,10 +228,17 @@ public class MainWindow extends javax.swing.JFrame {
 
         tfFPS.setText("500");
 
-        btnStopElevator.setText("Stop Elevator & Add Visitor");
-        btnStopElevator.addActionListener(new java.awt.event.ActionListener() {
+        btnAddVisitor.setText("Add Visitor");
+        btnAddVisitor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStopElevatorActionPerformed(evt);
+                btnAddVisitorActionPerformed(evt);
+            }
+        });
+
+        btnRemoveVisitor.setText("Remove Visitor");
+        btnRemoveVisitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveVisitorActionPerformed(evt);
             }
         });
 
@@ -231,7 +256,9 @@ public class MainWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnStopElevator)
+                        .addComponent(btnAddVisitor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRemoveVisitor)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -246,8 +273,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStopElevator))
-                .addContainerGap(312, Short.MAX_VALUE))
+                    .addComponent(btnAddVisitor)
+                    .addComponent(btnRemoveVisitor))
+                .addContainerGap(316, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Modify Simulation", pnlSimulation);
@@ -482,9 +510,15 @@ public class MainWindow extends javax.swing.JFrame {
         adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
 
-    private void btnStopElevatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopElevatorActionPerformed
-        stopElevator();
-    }//GEN-LAST:event_btnStopElevatorActionPerformed
+    private void btnAddVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVisitorActionPerformed
+        TableModel model = tblElevators.getModel();
+        addVisitorToElevator(model);
+    }//GEN-LAST:event_btnAddVisitorActionPerformed
+
+    private void btnRemoveVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveVisitorActionPerformed
+        TableModel model = tblElevators.getModel();
+        removeVisitorFromElevator(model);
+    }//GEN-LAST:event_btnRemoveVisitorActionPerformed
 
     public static void main(String args[]) {
         Controller controller = new Controller();
@@ -523,7 +557,7 @@ public class MainWindow extends javax.swing.JFrame {
         for (int jdx = 0; jdx < tblElevators.getRowCount(); ++jdx) {
             for (int kdx = 0; kdx < tblElevators.getColumnCount(); ++kdx) {
                 if (tblElevators.getValueAt(jdx, kdx) != null) {
-                    amount = (int) tblElevators.getValueAt(jdx, kdx);
+                    amount = (int) tblElevators.getValueAt(jdx, kdx);//kdx is going to be an issue once we have multiple elevators
                 }
             }
         }
@@ -531,12 +565,13 @@ public class MainWindow extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddVisitor;
     private javax.swing.JButton btnConfigureGrid;
     private javax.swing.JButton btnLoadScenario;
+    private javax.swing.JButton btnRemoveVisitor;
     private javax.swing.JButton btnResetGrid;
     private javax.swing.JButton btnSaveScenario;
     private javax.swing.JButton btnStartSimulation;
-    private javax.swing.JButton btnStopElevator;
     private javax.swing.JButton btnStopSimulation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
