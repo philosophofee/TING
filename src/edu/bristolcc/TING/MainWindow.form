@@ -171,6 +171,8 @@
                                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tfFPS" min="-2" pref="73" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnStopElevator" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -189,8 +191,9 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="tfFPS" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnStopElevator" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="315" max="32767" attributes="0"/>
+                              <EmptySpace pref="312" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -222,6 +225,14 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="500"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btnStopElevator">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Stop Elevator &amp; Add Visitor"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStopElevatorActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

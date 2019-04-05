@@ -3,9 +3,9 @@ package edu.bristolcc.TING;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -16,14 +16,18 @@ public class MainWindow extends javax.swing.JFrame {
     private Controller controller;
     public static File scenarioFile = new File("scenario.txt");
 
+    public int TESTVAR = 0;
+    public boolean GOINGUP = false;
+    public int amount = 0;
     private static List<Double> scores = new ArrayList<>();
-    
+    private static List<Integer> columns = new ArrayList<>();
+
     public MainWindow(Controller controller) {
         this.controller = controller;
         this.setLocationRelativeTo(null);
-        
+
         initComponents();
-        generateNewTable(4,4);
+        generateNewTable(4, 4);
         adjustTableColumns();
         pnlMain.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -33,50 +37,81 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }//MainWindow
 
-    public int TESTVAR = 0;
-    public double TESTVAR2 = 0;
-    public boolean GOINGUP = false;
+    public void getColumnIndices() {
+        TableModel model = tblElevators.getModel();
+        int maxColumns = model.getColumnCount();
+        for (int idx = 0; idx < maxColumns; ++idx) {
+            columns.add(idx);
+        }
+    }//getColumnIndices
+
     public void update() {
-        int value = controller.getCurrentData();
+        moveElevator();
+    }//update
+
+    //function for moving elevator up and down
+    public void moveElevator() {
+        TableModel model = tblElevators.getModel();
+        int maxRows = model.getRowCount();
+
+        for (int firstRow = 0; firstRow < maxRows; ++firstRow) {
+            model.setValueAt(null, firstRow, 1);
+        }
+
+        if (GOINGUP == false) {
+            if (TESTVAR < maxRows - 1) {
+                TESTVAR++;
+            }
+        }
+        if (GOINGUP == true) {
+            if (TESTVAR > 0) {
+                TESTVAR--;
+            }
+        }
+        if (TESTVAR == maxRows - 1 && GOINGUP == false) {
+            GOINGUP = true;
+        }
+        if (TESTVAR == 0 && GOINGUP == true) {
+            GOINGUP = false;
+        }
+
+        //amount = (int)model.getValueAt(TESTVAR, 1);
+        //for(int idx = 0; idx < columns.size(); ++idx){
+        model.setValueAt(amount, TESTVAR, 1);
+        //}
+
+        //adds amount of visitors to arraylist and updates view statistics graph when simulation is running
+        scores.add((double) amount);
+        pnlStats.setScores(scores);
+    }//moveElevator
+
+    //function to stop elevator and makes a call to add a visitor
+    public void stopElevator() {
+        controller.pauseAnimation();
 
         TableModel model = tblElevators.getModel();
+        addVisitorToElevator(model);
+    }//stopElevator
 
-        int maxRows = model.getRowCount();
-        int maxColumns = model.getColumnCount();
-
+    public void addVisitorToElevator(TableModel model) {
         try {
-            for (int firstRow=0; firstRow < maxRows; ++firstRow) {
-                for (int firstColumn=0; firstColumn < maxColumns; ++firstColumn) {
-                    //if (firstRow == firstColumn) {
-                        //model.setValueAt(++value, firstRow/*row*/, firstColumn/*column*/);
-                        //scores.add((double)(value));
-                        model.setValueAt(null, firstRow, firstColumn);
-                    //}
-                }
+            try{
+            amount = (int) model.getValueAt(TESTVAR, 1);
+            ++amount;
+
+            model.setValueAt(amount, TESTVAR, 1);
+
+            controller.startAnimation();
+            }catch(ArrayIndexOutOfBoundsException ex){
+                controller.startAnimation();
+                amount = (int) model.getValueAt(TESTVAR, 1);
+                ++amount;
+                model.setValueAt(amount, TESTVAR, 1);
             }
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            ex.printStackTrace();
+        } catch (NullPointerException ex) {
+            controller.startAnimation();
         }
-        if (GOINGUP==false) {
-            TESTVAR++;
-            TESTVAR2=(maxColumns/2)+(Math.sin(TESTVAR*10)*4);
-        }
-        if (GOINGUP==true) {
-            TESTVAR--;
-            TESTVAR2=(maxColumns/2)+(Math.sin(TESTVAR*10)*4);
-        }
-        if (TESTVAR==maxRows-1 && GOINGUP==false) {
-            GOINGUP=true;
-        }
-        if (TESTVAR==0 && GOINGUP==true) {
-            GOINGUP=false;
-        }
-        
-        model.setValueAt(1, TESTVAR, (int)TESTVAR2);
-        //updates view statistics graph when simulation is running
-        pnlStats.setScores(scores);
- 
-    }//update
+    }//addVisitorToElevator
 
     public Controller getController() {
         return controller;
@@ -101,6 +136,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnStopSimulation = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         tfFPS = new javax.swing.JTextField();
+        btnStopElevator = new javax.swing.JButton();
         pnlTable = new javax.swing.JPanel();
         txtFloors = new javax.swing.JTextField();
         lblFloors = new javax.swing.JLabel();
@@ -174,6 +210,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         tfFPS.setText("500");
 
+        btnStopElevator.setText("Stop Elevator & Add Visitor");
+        btnStopElevator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopElevatorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlSimulationLayout = new javax.swing.GroupLayout(pnlSimulation);
         pnlSimulation.setLayout(pnlSimulationLayout);
         pnlSimulationLayout.setHorizontalGroup(
@@ -187,6 +230,8 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStopElevator)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -200,8 +245,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(315, Short.MAX_VALUE))
+                    .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnStopElevator))
+                .addContainerGap(312, Short.MAX_VALUE))
         );
 
         tbdPaneMain.addTab("Modify Simulation", pnlSimulation);
@@ -359,35 +405,37 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
-        controller.resetAnimation();
-        generateNewTable(Integer.parseInt(txtFloors.getText()), Integer.parseInt(txtElevators.getText()));
+        try {
+            generateNewTable((Integer.parseInt(txtElevators.getText())), (Integer.parseInt(txtFloors.getText())));
+            controller.resetAnimation();
+        } catch (NumberFormatException ex) {
+            controller.pauseAnimation();
+            txtFloors.setText("NaN");
+            txtElevators.setText("NaN");
+        }
     }//GEN-LAST:event_btnConfigureGridActionPerformed
 
     public void generateNewTable(int elevators, int floors) {
-        try {
-            int columnCount = elevators+1;
-            
-            // configure column names
-            String[] columnNames = new String[columnCount];
-            char[] dummy = {'A'};
-            columnNames[0] = "Floor";
-            for (int idx = 1; idx < columnCount; ++idx) {
-                dummy[0] = (char) (idx-1 + 'A');
-                columnNames[idx] = new String(dummy);
-            }
-            // populate 2-dimensional array of data
-            Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
-            
-            tblElevators.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-            
-            adjustTableColumns();
-        } catch (NumberFormatException ex) {
-            txtFloors.setText("NaN");
-            txtElevators.setText("NaN");
-            tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
+
+        int columnCount = elevators + 1;
+
+        // configure column names
+        String[] columnNames = new String[columnCount];
+        char[] dummy = {'A'};
+        columnNames[0] = "Floor";
+        for (int idx = 1; idx < columnCount; ++idx) {
+            dummy[0] = (char) (idx - 1 + 'A');
+            columnNames[idx] = new String(dummy);
         }
-    }
-    
+        // populate 2-dimensional array of data
+        Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
+
+        tblElevators.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
+
+        adjustTableColumns();
+        getColumnIndices();
+    }//generateNewTable
+
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
         adjustTableColumns();
         controller.animationThread.setSpeed(Long.parseLong(tfFPS.getText()));
@@ -396,11 +444,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnResetGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetGridActionPerformed
         controller.resetAnimation();
-        tblElevators.setModel(new javax.swing.table.DefaultTableModel(4, 4));
+        generateNewTable(4, 4);
         List<Double> scores = new ArrayList<>();
         //resets view statistics graph
         pnlStats.setScores(scores);
-        
+
     }//GEN-LAST:event_btnResetGridActionPerformed
 
     private void btnStopSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopSimulationActionPerformed
@@ -422,14 +470,21 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnLoadScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScenarioActionPerformed
+        controller.pauseAnimation();
         FilePicker picker = new FilePicker(null);
         File toLoad = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", false);
+
         if (toLoad == null) {
             return;
         }
+
         controller.loadScenario(tblElevators, toLoad); //open ui to load scenario file into jTable
         adjustTableColumns();
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
+
+    private void btnStopElevatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopElevatorActionPerformed
+        stopElevator();
+    }//GEN-LAST:event_btnStopElevatorActionPerformed
 
     public static void main(String args[]) {
         Controller controller = new Controller();
@@ -453,26 +508,35 @@ public class MainWindow extends javax.swing.JFrame {
             column.setPreferredWidth(pnlMain.getWidth() / columns/*pixels*/);
             column.setWidth(pnlMain.getWidth() / columns/*pixels*/);
         }
-        
-        tblElevators.setRowHeight(pnlMain.getHeight()/tblElevators.getRowCount()-5);
+
+        tblElevators.setRowHeight(pnlMain.getHeight() / tblElevators.getRowCount() - 5);
         tblElevators.getTableHeader().setReorderingAllowed(false);
-        
+
         //this looks pretty
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        for (int i=0; i<tblElevators.getColumnCount(); i++) {
+        for (int i = 0; i < tblElevators.getColumnCount(); i++) {
             tblElevators.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        for (int jdx = 0; jdx < tblElevators.getRowCount(); ++jdx) {
+            for (int kdx = 0; kdx < tblElevators.getColumnCount(); ++kdx) {
+                if (tblElevators.getValueAt(jdx, kdx) != null) {
+                    amount = (int) tblElevators.getValueAt(jdx, kdx);
+                }
+            }
         }
     }//adjustTableColumns
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfigureGrid;
     private javax.swing.JButton btnLoadScenario;
     private javax.swing.JButton btnResetGrid;
     private javax.swing.JButton btnSaveScenario;
     private javax.swing.JButton btnStartSimulation;
+    private javax.swing.JButton btnStopElevator;
     private javax.swing.JButton btnStopSimulation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

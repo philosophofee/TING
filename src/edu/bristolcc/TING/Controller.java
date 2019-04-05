@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import static java.lang.Thread.State.NEW;
@@ -29,7 +30,7 @@ public class Controller {
     public void startAnimation() {
         simulationStatus = true;
 
-        if ((animationThread.getCount() == 0 && th.getState().equals(TIMED_WAITING) || animationThread.getCount() != 0) && (!th.getState().equals(NEW))) {
+        if (((window.amount == 0 && th.getState().equals(TIMED_WAITING)) || window.amount != 0) && (!th.getState().equals(NEW))) {
             th.resume();
             //System.out.println("resume after reset: " + th.getState());
         } else {
@@ -41,7 +42,7 @@ public class Controller {
     public void resetAnimation() {
         simulationStatus = false;
         th.suspend();
-        animationThread.setCount(0);
+        window.amount = 0;
         //System.out.println("stop: " + th.getState());
     }//resetAnimation
 
@@ -104,52 +105,53 @@ public class Controller {
     public void loadScenario(JTable table, File file) {
         try {
             //get file the user loaded in and turn it into an inputstream
-            DataInputStream scenario = new DataInputStream(new FileInputStream(file));
+                DataInputStream scenario = new DataInputStream(new FileInputStream(file));
 
-            //set the animation count from the first integer in the data
-            animationThread.setCount(scenario.readInt());
+                //set the animation count from the first integer in the data
+                animationThread.setCount(scenario.readInt());
 
-            //get row and column informatiom from scenario
-            int row_idx = scenario.readInt();
-            int column_idx = scenario.readInt();
+                //get row and column informatiom from scenario
+                int row_idx = scenario.readInt();
+                int column_idx = scenario.readInt();
 
             //the following code is effectively copied from MainWindow.btnConfigureGridActionPerformed()
-            //which will automatically configure the grid based on the file loaded
-            //try {
-            //    // configure column names
-            //    String[] columnNames = new String[column_idx];
-            //    char[] dummy = {'A'};
-            //    for (int idx = 0; idx < column_idx; ++idx) {
-            //        dummy[0] = (char) (idx + 'A');
-            //        columnNames[idx] = new String(dummy);
-            //    }
-            //    // populate 2-dimensional array of data
-            //    Object[][] tableContent = new Object[row_idx/*rows*/][column_idx/*columns*/];
-            //    table.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-            //} catch (Exception ex) {
-            //    ex.printStackTrace();
-            //}
-            window.generateNewTable(row_idx, column_idx-1);
-            //now that we have a new table, let's create a new object to reference later
-            TableModel model = table.getModel();
+                //which will automatically configure the grid based on the file loaded
+                //try {
+                //    // configure column names
+                //    String[] columnNames = new String[column_idx];
+                //    char[] dummy = {'A'};
+                //    for (int idx = 0; idx < column_idx; ++idx) {
+                //        dummy[0] = (char) (idx + 'A');
+                //        columnNames[idx] = new String(dummy);
+                //    }
+                //    // populate 2-dimensional array of data
+                //    Object[][] tableContent = new Object[row_idx/*rows*/][column_idx/*columns*/];
+                //    table.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
+                //} catch (Exception ex) {
+                //    ex.printStackTrace();
+                //}
+                window.generateNewTable(row_idx, column_idx - 1);
+                //now that we have a new table, let's create a new object to reference later
+                TableModel model = table.getModel();
 
-            //for each row and column cell in order
-            for (int i = 0; i < row_idx; i++) {
-                for (int j = 0; j < column_idx; j++) {
-                    //read integer for cell from scenario data
-                    int toWorkWith = scenario.readInt();
+                //for each row and column cell in order
+                for (int i = 0; i < row_idx; i++) {
+                    for (int j = 0; j < column_idx; j++) {
+                        //read integer for cell from scenario data
+                        int toWorkWith = scenario.readInt();
 
-                    //if the data is not 0xFFFFFFFF (aka what we effectively saved as null)
-                    if (toWorkWith != -1) {
-                        model.setValueAt(toWorkWith, i, j);
-                        //System.out.println("set value " + toWorkWith + " at i:" + i + ", j:" + j);
+                        //if the data is not 0xFFFFFFFF (aka what we effectively saved as null)
+                        if (toWorkWith != -1) {
+                            model.setValueAt(toWorkWith, i, j);
+                            //System.out.println("set value " + toWorkWith + " at i:" + i + ", j:" + j);
+                        }
                     }
                 }
-            }
-            //make sure we set the simulation status to yes, we have one going on
-            simulationStatus = true;
-            //job well done
-            scenario.close();
+                //make sure we set the simulation status to yes, we have one going on
+                simulationStatus = true;
+                //job well done
+                scenario.close();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
