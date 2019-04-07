@@ -9,9 +9,7 @@ public class TestWindow extends javax.swing.JFrame {
     Controller2 controller;
 
     public TestWindow() {
-
         initComponents();
-        //this.floorBank = new FloorBank(bigTable.getModel().getRowCount());
         floorBank.instantiate(bigTable.getModel().getRowCount());
         elevatorBank = new ElevatorBank(bigTable.getModel().getColumnCount() - 1, bigTable.getModel().getRowCount()); //because the floor column doesn't count
     }
@@ -185,7 +183,6 @@ public class TestWindow extends javax.swing.JFrame {
         //generates random number for floor a visitor gets added to
         Random rand = new Random();
         int random_integer = rand.nextInt(bigTable.getModel().getRowCount() - 0) + 0;
-
         floorBank.getFloorsArray().get(random_integer).addVisitorToFloor(bigTable.getModel().getRowCount());
         updateTable();
     }//GEN-LAST:event_btnAddVisitorActionPerformed
@@ -250,11 +247,12 @@ public class TestWindow extends javax.swing.JFrame {
 
             int visitor_floor = floorBank.getFloorsArray().get(i).FLOOR_LEVEL;
 
-            if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengers() < 10)) {
+            if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < 10)) {
                 if (visitor_floor == elevator_floor) {
                     for (int j = 0; j < floorBank.getFloorsArray().get(i).getVisitorCount(); ++j) {
                         elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
                         floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
+                        //System.out.println(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
                     }
                 }
             }
@@ -273,11 +271,12 @@ public class TestWindow extends javax.swing.JFrame {
 
             int visitor_floor = floorBank.getFloorsArray().get(i).FLOOR_LEVEL;
 
-            if ((elevatorBank.getElevatorsArray().get(0).getPassengers() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengers() <= 10)) {
+            if ((elevatorBank.getElevatorsArray().get(0).getPassengerCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() <= 10)) {
                 if (visitor_floor == elevator_floor) {
-                    for (int j = 0; j < elevatorBank.getElevatorsArray().get(0).getPassengers(); ++j) {
+                    for (int j = 0; j < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++j) {
                         floorBank.getFloorsArray().get(i).recieveVisitorFromElevator(elevatorBank.getElevatorsArray().get(0).PASSENGERS.get(j));
                         elevatorBank.getElevatorsArray().get(0).swipeVisitorOff(elevatorBank.getElevatorsArray().get(0).PASSENGERS.get(j));
+                        //System.out.println(floorBank.getFloorsArray().get(i).getVisitorsArray().get(i));
                     }
                 }
             }
@@ -287,16 +286,14 @@ public class TestWindow extends javax.swing.JFrame {
     private void updateTable() {
         System.out.println("------------ STARTING TICK ------------");
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
-            System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
-        }
-        for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
+            System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
         }
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             for (int j = 1; j < bigTable.getModel().getColumnCount(); j++) {
                 //System.out.println(i + ", " + j + ", " + elevatorBank.getElevatorsArray().size());
                 if (elevatorBank.getElevatorsArray().get(j - 1).getMyFloor() == i) {
-                    bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengers(), i, j);
+                    bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
                 } else {
                     bigTable.getModel().setValueAt(null, i, j);
                 }

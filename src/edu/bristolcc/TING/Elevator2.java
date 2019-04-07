@@ -21,9 +21,13 @@ public class Elevator2 {
                 + "and I am on floor " + CURRENT_FLOOR);
     }//Elevator2
     
-    public int getPassengers() {
+    public int getPassengerCount() {
         return PASSENGERS.size();
-    }//getPassengers
+    }//getPassengerCount
+    
+    public ArrayList<Visitor> getPassengersArray() {
+        return PASSENGERS;
+    }//getPassengersArray
     
     public void swipeVisitorOn(Visitor visitor) {
         PASSENGERS.add(visitor);   
