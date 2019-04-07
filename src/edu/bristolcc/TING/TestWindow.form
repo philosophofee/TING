@@ -29,26 +29,27 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jToggleButton1" max="32767" attributes="0"/>
-                          <Component id="jButton3" max="32767" attributes="0"/>
+                          <Component id="btnAddVisitor" max="32767" attributes="0"/>
+                          <Component id="btnMoveElevator" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblElevator" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="tfMoveElevator1" min="-2" pref="90" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblFloor" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="tfMoveElevator2" min="-2" pref="90" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jButton4" max="32767" attributes="0"/>
-                          <Component id="jButton6" max="32767" attributes="0"/>
+                          <Component id="btnMoveVisitor" max="32767" attributes="0"/>
+                          <Component id="btnMovePassenger" max="32767" attributes="0"/>
+                          <Component id="btnRunFullTick" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUpdateTable" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -64,22 +65,24 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jToggleButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="btnAddVisitor" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+              <Component id="btnMoveElevator" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="tfMoveElevator1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tfMoveElevator2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblFloor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblElevator" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+              <Component id="btnMoveVisitor" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton6" min="-2" max="-2" attributes="0"/>
+              <Component id="btnMovePassenger" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnRunFullTick" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+              <Component id="btnUpdateTable" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -108,28 +111,28 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JToggleButton" name="jToggleButton1">
+    <Component class="javax.swing.JToggleButton" name="btnAddVisitor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Add Visitor to Random Floor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddVisitorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btnUpdateTable">
       <Properties>
         <Property name="text" type="java.lang.String" value="Update Table"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateTableActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="btnMoveElevator">
       <Properties>
         <Property name="text" type="java.lang.String" value="Move [Elevator] by [Floor]"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveElevatorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="tfMoveElevator1">
@@ -138,31 +141,42 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="tfMoveElevator2">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfMoveElevator2ActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="lblFloor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Floor: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="lblElevator">
       <Properties>
         <Property name="text" type="java.lang.String" value="Elevator: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton4">
+    <Component class="javax.swing.JButton" name="btnMoveVisitor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Remove Visitor from Floor and Add to Elevator"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveVisitorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton6">
+    <Component class="javax.swing.JButton" name="btnMovePassenger">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add Visitor to Floor and Remove from Elevator"/>
+        <Property name="text" type="java.lang.String" value="Remove Passenger from Elevator and Add to Floor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMovePassengerActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRunFullTick">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Run 1 Full Tick of Simulation"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRunFullTickActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
