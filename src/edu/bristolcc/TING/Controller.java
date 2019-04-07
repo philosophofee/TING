@@ -14,7 +14,6 @@ public class Controller {
     
     Controller controller;
     private MainWindow window;
-    private Visitor visitor= new Visitor(this);
     public Elevator elevator = new Elevator(this);
     private Scenario scenario = new Scenario(this);
     public ThreadAnimation animationThread = new ThreadAnimation(this);
@@ -80,16 +79,16 @@ public class Controller {
     public void moveElevator(TableModel model, Statistics pnlStats) {
         elevator.moveElevator(model,pnlStats);
     }//moveElevator
-
+    /*
     public void addVisitorToElevator(TableModel model) {
         System.out.println("test controller call add");
-        visitor.addVisitorToElevator(model, getAmount(), getTESTVAR()/*, controller*/);
+        visitor.addVisitorToElevator(model, getAmount(), getTESTVAR());
     }//addVisitorToElevator
     
     public void removeVisitorFromElevator(TableModel model) {
         System.out.println("test controller call remove");
-        visitor.removeVisitorFromElevator(model, getAmount(), getTESTVAR()/*, controller*/);
-    }//removeVisitorToElevator
+        visitor.removeVisitorFromElevator(model, getAmount(), getTESTVAR());
+    }//removeVisitorToElevator*/
     
     private static List<Integer> columns = new ArrayList<>();
     

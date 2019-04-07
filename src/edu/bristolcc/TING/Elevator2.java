@@ -19,28 +19,32 @@ public class Elevator2 {
         System.out.println("hello from elevator " + MY_IDENTIFIER + ". "
                 + "I currently have " + PASSENGERS.size() + " passengers "
                 + "and I am on floor " + CURRENT_FLOOR);
-    }
+    }//Elevator2
     
     public int getPassengers() {
         return PASSENGERS.size();
-    }
+    }//getPassengers
     
-    public void swipeVisitor(Visitor visitor) {
-        PASSENGERS.add(visitor);
-    }
+    public void swipeVisitorOn(Visitor visitor) {
+        PASSENGERS.add(visitor);   
+    }//swipeVisitorOn
     
+    public void swipeVisitorOff(Visitor visitor) {
+        PASSENGERS.remove(visitor);
+    }//swipeVisitorOff
+  
     public void moveFloor(int amount) {
         if (CURRENT_FLOOR+amount>=0 && CURRENT_FLOOR+amount<=MAX_FLOOR) {
             CURRENT_FLOOR+=amount;
         }
-    }
+    }//moveFloor
     
     public int getMyFloor() {
         return CURRENT_FLOOR;
-    }
+    }//getMyFloor
     
     public void tick() {
         System.out.println("tick from elevator " + MY_IDENTIFIER + ". I currently have " + PASSENGERS.size() + " passengers and I am on floor " + CURRENT_FLOOR);
-    }
+    }//tick
     
-}
+}//class Elevator2

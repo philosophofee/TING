@@ -414,13 +414,13 @@ public class MainWindow extends javax.swing.JFrame {
     
     private void btnAddVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVisitorActionPerformed
         TableModel model = tblElevators.getModel();
-        controller.addVisitorToElevator(model);
+        //controller.addVisitorToElevator(model);
         System.out.println("test button add");
     }//GEN-LAST:event_btnAddVisitorActionPerformed
 
     private void btnRemoveVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveVisitorActionPerformed
         TableModel model = tblElevators.getModel();
-        controller.removeVisitorFromElevator(model);
+        //controller.removeVisitorFromElevator(model);
         System.out.println("test button remove");
     }//GEN-LAST:event_btnRemoveVisitorActionPerformed
 
