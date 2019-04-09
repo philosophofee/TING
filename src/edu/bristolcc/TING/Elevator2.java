@@ -16,9 +16,9 @@ public class Elevator2 {
         this.MY_IDENTIFIER = ID;
         this.CURRENT_FLOOR = startingFloor;
         this.MAX_FLOOR = maxFloor;
-        System.out.println("hello from elevator " + MY_IDENTIFIER + ". "
+        /*System.out.println("hello from elevator " + MY_IDENTIFIER + ". "
                 + "I currently have " + PASSENGERS.size() + " passengers "
-                + "and I am on floor " + CURRENT_FLOOR);
+                + "and I am on floor " + CURRENT_FLOOR);*/
     }//Elevator2
     
     public int getPassengerCount() {
@@ -48,7 +48,7 @@ public class Elevator2 {
     }//getMyFloor
     
     public void tick() {
-        System.out.println("tick from elevator " + MY_IDENTIFIER + ". I currently have " + PASSENGERS.size() + " passengers and I am on floor " + CURRENT_FLOOR);
+        //System.out.println("tick from elevator " + MY_IDENTIFIER + ". I currently have " + PASSENGERS.size() + " passengers and I am on floor " + CURRENT_FLOOR);
     }//tick
     
 }//class Elevator2

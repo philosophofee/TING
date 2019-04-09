@@ -1,6 +1,8 @@
 package edu.bristolcc.TING;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestWindow extends javax.swing.JFrame {
 
@@ -202,45 +204,61 @@ public class TestWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_tfMoveElevator2ActionPerformed
 
     private void btnRunFullTickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunFullTickActionPerformed
-        
+
         /*NEED TO FIND A BETTER WAY TO KEEP TRACK OF VISITORS*/
         /*RIGHT NOW THIS ONLY WORKS FOR 1 VISITOR AND 1 ELEVATOR*/
-        
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
             if (floorBank.getFloorsArray().get(i).getVisitorCount() > 0) {
-                if (((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).FLOOR_LEVEL)) != 0) {
-                    elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).FLOOR_LEVEL)));
-                    if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).FLOOR_LEVEL) {
-                        moveOnToElevator();
-                        elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).DESTINATION)));
-                        moveOffOfElevator();
-                    }
-                } else {
-                    elevatorBank.moveElevator(0, ((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) + (floorBank.getFloorsArray().get(i).DESTINATION)));
-                    if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).FLOOR_LEVEL) {
-                        moveOnToElevator();
-                        elevatorBank.moveElevator(0, ((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) + (floorBank.getFloorsArray().get(i).DESTINATION)));
-                        moveOffOfElevator();
+                for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
+                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).MY_FLOOR) {
+                        elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).FLOOR_LEVEL)));
+                        if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).FLOOR_LEVEL) {
+
+                            for (int j = 0; j < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++j) {
+                                System.out.println("\nFloor Object of Visitor: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(j) + "(Before Elevator)");
+                                System.out.println("Floor that Visitor is on: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(j).getMY_FLOOR() + "+1 should = orignal floor ");
+                            }
+
+                            moveOnToElevator();
+
+                            for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengersArray().size(); ++k) {
+                                System.out.println("Elevator Object of Visitor: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k) + "(In Elevator)");
+                                System.out.println("Visitors Destination according to Elevator: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "+1");
+
+                                int destination = -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION));
+                                elevatorBank.moveElevator(0, destination);
+                                if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+                                    moveOffOfElevator();
+                                    /*for (int l = 0; l < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++l) {
+                                     try {
+                                     Thread.sleep(1000);
+                                     floorBank.getFloorsArray().get(i).getVisitorsArray().remove(l);
+                                     } catch (InterruptedException ex) {
+                                     Logger.getLogger(TestWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                     }
+                                     }*/
+                                }
+                            }
+                        }
                     }
                 }
+                /*for (int l = 0; l < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++l) {
+                    System.out.println("Floor Object of Visitor: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(l) + "(After Elevator)");
+
+                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(l).getMY_FLOOR() == floorBank.getFloorsArray().get(i).getVisitorsArray().get(l).DESTINATION) {
+                        System.out.println("Floor that Visitor is on: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(l).getMY_FLOOR() + "+1 should = destination " + "\n");
+
+                    }
+                }*/
             }
+            updateTable();
         }
-        updateTable();
     }//GEN-LAST:event_btnRunFullTickActionPerformed
 
     public void moveOnToElevator() {
 
         /*NEED TO FIND A BETTER WAY TO KEEP TRACK OF VISITORS*/
         /*RIGHT NOW THIS ONLY WORKS FOR 1 VISITOR AND 1 ELEVATOR*/
-        
-        //working on multiple elevators once first elevator is full switch to next one
-        /*for (int j = 0; j < elevatorBank.getElevatorsArray().size(); ++j) {
-         if (elevatorBank.getElevatorsArray().get(j).getPassengers() == 10) {
-         elevator_floor = elevatorBank.getElevatorsArray().get(++j).CURRENT_FLOOR;
-         System.out.println("elevator " + elevatorBank.getElevatorsArray().get(++j).MY_IDENTIFIER + " is on floor " + elevator_floor);
-         }
-         }*/
-        //hard coded for only first elevator
         int elevator_floor = elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR;
 
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
@@ -250,9 +268,11 @@ public class TestWindow extends javax.swing.JFrame {
             if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < 10)) {
                 if (visitor_floor == elevator_floor) {
                     for (int j = 0; j < floorBank.getFloorsArray().get(i).getVisitorCount(); ++j) {
-                        elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
-                        floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
-                        //System.out.println(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
+                        if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(j).MY_FLOOR != floorBank.getFloorsArray().get(i).getVisitorsArray().get(j).DESTINATION) {
+                            elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
+                            floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(j));
+                            //System.out.println(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
+                        }
                     }
                 }
             }
@@ -260,11 +280,9 @@ public class TestWindow extends javax.swing.JFrame {
     }//moveOnToElevator
 
     public void moveOffOfElevator() {
-        
+
         /*NEED TO FIND A BETTER WAY TO KEEP TRACK OF VISITORS*/
         /*RIGHT NOW THIS ONLY WORKS FOR 1 VISITOR AND 1 ELEVATOR*/
-        
-        //hard coded for only first elevator
         int elevator_floor = elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR;
 
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
@@ -276,7 +294,10 @@ public class TestWindow extends javax.swing.JFrame {
                     for (int j = 0; j < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++j) {
                         floorBank.getFloorsArray().get(i).recieveVisitorFromElevator(elevatorBank.getElevatorsArray().get(0).PASSENGERS.get(j));
                         elevatorBank.getElevatorsArray().get(0).swipeVisitorOff(elevatorBank.getElevatorsArray().get(0).PASSENGERS.get(j));
-                        //System.out.println(floorBank.getFloorsArray().get(i).getVisitorsArray().get(i));
+                        for (int k = 0; k < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++k) {
+                            floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).setMY_FLOOR(floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION);
+                            //System.out.println(floorBank.getFloorsArray().get(i).getVisitorsArray().get(i));
+                        }
                     }
                 }
             }
@@ -284,10 +305,10 @@ public class TestWindow extends javax.swing.JFrame {
     }//moveOffOfElevator
 
     private void updateTable() {
-        System.out.println("------------ STARTING TICK ------------");
+        //System.out.println("------------ STARTING TICK ------------");
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
-            System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
+            //System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
         }
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             for (int j = 1; j < bigTable.getModel().getColumnCount(); j++) {

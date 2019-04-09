@@ -28,7 +28,6 @@ public class Floor {
 
     public void recieveVisitorFromElevator(Visitor visitor) {
         visitorsArray.add(visitor);
-        //visitorsArray.remove(visitor);
     }//giveVisitorToElevator
 
     public void addVisitorToFloor(int MAX_FLOORS) {
@@ -41,9 +40,4 @@ public class Floor {
         }
     }//addVisitorToFloor
 
-    /*public void floorHasVisitor(){
-     for(int i = 0; i < getVisitorCount(); ++i){
-     System.out.println(visitorsArray.get(i) + " " + FLOOR_LEVEL + " " + DESTINATION);
-     }
-     }//floorHasVisitor*/
 }//class Floor
