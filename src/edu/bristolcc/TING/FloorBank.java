@@ -9,7 +9,7 @@ public class FloorBank {
     
     public void instantiate(int floors) {
         this.FLOOR_MAX = floors;
-        for (int i=0; i<FLOOR_MAX; i++) {
+        for (int i=0; i < FLOOR_MAX; i++) {
             MY_FLOORS.add(new Floor(i));
         }
     }//instantiate

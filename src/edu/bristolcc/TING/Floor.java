@@ -33,7 +33,7 @@ public class Floor {
     public void addVisitorToFloor(int MAX_FLOORS) {
         Random rand = new Random();
         DESTINATION = rand.nextInt(((MAX_FLOORS - 1) - 0) + 1) + 0;
-        
+
         if (DESTINATION != FLOOR_LEVEL) {
             Visitor newVisitor = new Visitor(FLOOR_LEVEL, DESTINATION);
             visitorsArray.add(newVisitor);

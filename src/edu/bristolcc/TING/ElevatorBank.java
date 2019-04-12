@@ -11,7 +11,7 @@ public class ElevatorBank
     public ElevatorBank(int elevatorCount, int maxFloor) {
         this.ELEVATOR_COUNT = elevatorCount;
         this.MAX_FLOORS = maxFloor-1; //for tables sake
-        System.out.println("hello from elevator bank. it appears I will need to create " + ELEVATOR_COUNT + " elevators");
+        System.out.println("Hello from elevator bank. It appears I will need to create " + ELEVATOR_COUNT + " elevators\n");
         
         for (int i=0; i<ELEVATOR_COUNT; i++) {
             Elevator2 elevatorToAdd = new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS); //adding to the bottom
