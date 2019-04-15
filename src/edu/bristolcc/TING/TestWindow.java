@@ -271,7 +271,6 @@ public class TestWindow extends javax.swing.JFrame {
                 }
             }
         }
-        //elevatorBank.elevatorIsAvaliable();
         System.out.println("\n");
     }//GEN-LAST:event_btnShowVisitorsActionPerformed
 
@@ -281,7 +280,6 @@ public class TestWindow extends javax.swing.JFrame {
                 System.out.println("Passenger " + elevatorBank.getElevatorsArray().get(j).getPassengersArray().get(i) + " wants to go to floor " + elevatorBank.getElevatorsArray().get(j).getPassengersArray().get(i).DESTINATION + "+1");
             }
         }
-        //elevatorBank.elevatorIsAvaliable();
         System.out.println("\n");
     }//GEN-LAST:event_btnShowPassengersActionPerformed
 
@@ -293,11 +291,9 @@ public class TestWindow extends javax.swing.JFrame {
                 if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
                     if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
                         if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-
                             elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
                             floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
 
-                            //System.out.println(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
                         }
                     }
                 }
