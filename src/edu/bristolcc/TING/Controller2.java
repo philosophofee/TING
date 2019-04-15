@@ -64,7 +64,6 @@ public class Controller2 {
         });
     }//animate
 
-    /*FIX SAVE AND LOAD SCENARIO DUE TO FIRST COLUMN "FLOOR"*/
     public void saveScenario(JTable table, File file) {
         try {
             //get information about the table right now

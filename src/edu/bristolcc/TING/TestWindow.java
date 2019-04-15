@@ -23,8 +23,6 @@ public class TestWindow extends javax.swing.JFrame {
 
         /*RIGHT NOW THIS ONLY WORKS 1 ELEVATOR*/
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
-
-            //if (floorBank.getFloorsArray().get(i).getVisitorCount() > 0) {
             for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
                 if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
                     elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR())));
@@ -47,7 +45,6 @@ public class TestWindow extends javax.swing.JFrame {
             }
             updateTable();
         }
-        //}
     }
 
     @SuppressWarnings("unchecked")
@@ -209,14 +206,14 @@ public class TestWindow extends javax.swing.JFrame {
 
         tbdPaneMain.addTab("Update Table", pnlTable);
 
-        btnSaveScenario.setText("Save Scenario (Fix according to extra column \"Floor\")");
+        btnSaveScenario.setText("Save Scenario");
         btnSaveScenario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveScenarioActionPerformed(evt);
             }
         });
 
-        btnLoadScenario.setText("Load Scenario (Fix according to extra column \"Floor\")");
+        btnLoadScenario.setText("Load Scenario");
         btnLoadScenario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoadScenarioActionPerformed(evt);

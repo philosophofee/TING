@@ -273,7 +273,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btnSaveScenario">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Save Scenario (Fix according to extra column &quot;Floor&quot;)"/>
+                    <Property name="text" type="java.lang.String" value="Save Scenario"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveScenarioActionPerformed"/>
@@ -281,7 +281,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnLoadScenario">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Load Scenario (Fix according to extra column &quot;Floor&quot;)"/>
+                    <Property name="text" type="java.lang.String" value="Load Scenario"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadScenarioActionPerformed"/>
