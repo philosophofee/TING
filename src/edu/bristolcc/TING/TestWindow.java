@@ -19,26 +19,42 @@ public class TestWindow extends javax.swing.JFrame {
 
     public void update() {
         /*Adds visitors to random floors every tick of the simulation*/
-        addVisitors();
+        //addVisitors();
 
         /*RIGHT NOW THIS ONLY WORKS 1 ELEVATOR*/
+        
+        floorBank.tick();
+        elevatorBank.tick();
+        
+        //for loop, do row count times (i=floor)
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
+            //for loop, do visitor count times on each floor (m=visitor)
             for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
+                //if visitor m on floor i's desination is not equal to the floor it is currently on
                 if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
+                    //move the friggin elevator (IN THE FIRST ROW (IMPORTANT)) to the person
                     elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR())));
+                    //if said elevator's current floor is equal to the floor the visitor is on,
                     if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
-                            //System.out.println("\nFloor Object of Visitor: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m) + "(Before Elevator)");
+                        //System.out.println("\nFloor Object of Visitor: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m) + "(Before Elevator)");
                         //System.out.println("Floor that Visitor is on: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() + "+1 should = orignal floor ");
+                        
+                        //put the visitor on the elevator
                         moveOnToElevator();
 
+                        //for loop, get all the passengers in the first elevator
                         for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengersArray().size(); ++k) {
                                 //System.out.println("Elevator Object of Visitor: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k) + "(In Elevator)");
                             //System.out.println("Visitors Destination according to Elevator: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "+1");
 
+                            //move the elevator to the destination that the visitor wants to go to
                             elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION)));
+        
+                                  //if the elevator is on the destination floor
                             if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+                                //get off elevator
                                 moveOffOfElevator();
-                            }
+                            }          
                         }
                     }
                 }
@@ -579,19 +595,25 @@ public class TestWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_tfFPSActionPerformed
 
     public void addVisitors() {
+        //for (int i = 0; i < 6; ++i) {
+        //    //generates random number for floor a visitor gets added to
+        //    Random rand = new Random();
+        //    int random_integer = rand.nextInt(bigTable.getModel().getRowCount() - 0) + 0;
+        //    floorBank.getFloorsArray().get(random_integer).addVisitorToFloor(bigTable.getModel().getRowCount());
+        //}
         for (int i = 0; i < 6; ++i) {
-            //generates random number for floor a visitor gets added to
-            Random rand = new Random();
-            int random_integer = rand.nextInt(bigTable.getModel().getRowCount() - 0) + 0;
-            floorBank.getFloorsArray().get(random_integer).addVisitorToFloor(bigTable.getModel().getRowCount());
+            floorBank.getFloorsArray().get(bigTable.getModel().getRowCount()-1).addVisitorToFloor(bigTable.getModel().getRowCount()-1);
         }
     }//addVisitors
 
     public void moveOnToElevator() {
 
         /*RIGHT NOW THIS ONLY WORKS FOR 1 ELEVATOR*/
+        //for each row (i = row)
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
+            //for each visitor on row i (m = visitor)
             for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
+                //if floor i's visitor count is greater than 0 and the FIRST elevator has less passengers than its capacity
                 if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
                     if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
                         if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
@@ -650,14 +672,24 @@ public class TestWindow extends javax.swing.JFrame {
     private void updateTable() {
         //System.out.println("------------ STARTING TICK ------------");
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
-            bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
+            //bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
+            String daBoys = "";
+            for (Visitor visitor : floorBank.getFloorsArray().get(i).getVisitorsArray() ) {
+                daBoys += visitor.MY_NAME + " | ";
+            }
+            bigTable.getModel().setValueAt(daBoys, i, 0);
             //System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
         }
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             for (int j = 1; j < bigTable.getModel().getColumnCount(); j++) {
                 //System.out.println(i + ", " + j + ", " + elevatorBank.getElevatorsArray().size());
                 if (elevatorBank.getElevatorsArray().get(j - 1).getMyFloor() == i) {
-                    bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
+                    //bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
+                    String daBoys = "";
+                    for (Visitor visitor : elevatorBank.getElevatorsArray().get(j - 1).getPassengersArray() ) {
+                        daBoys += visitor.MY_NAME + "|";
+                    }
+                    bigTable.getModel().setValueAt(daBoys, i, j);
                 } else {
                     bigTable.getModel().setValueAt(null, i, j);
                 }

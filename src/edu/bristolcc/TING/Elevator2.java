@@ -32,10 +32,12 @@ public class Elevator2 {
     }//getPassengersArray
     
     public void swipeVisitorOn(Visitor visitor) {
-        PASSENGERS.add(visitor);   
+        visitor.MY_STATUS = VisitorStatus.RIDING;
+        PASSENGERS.add(visitor);
     }//swipeVisitorOn
     
     public void swipeVisitorOff(Visitor visitor) {
+        visitor.MY_STATUS = VisitorStatus.ARRIVED;
         PASSENGERS.remove(visitor);
     }//swipeVisitorOff
   
@@ -51,6 +53,9 @@ public class Elevator2 {
     
     public void tick() {
         //System.out.println("tick from elevator " + MY_IDENTIFIER + ". I currently have " + PASSENGERS.size() + " passengers and I am on floor " + CURRENT_FLOOR);
+        for (Visitor visitor : PASSENGERS) {
+            visitor.tick();
+        }
     }//tick
     
 }//class Elevator2

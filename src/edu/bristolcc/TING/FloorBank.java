@@ -18,4 +18,12 @@ public class FloorBank {
         return MY_FLOORS;
     }//getFloorsArray
     
+    public void tick() {
+        for (Floor floor : MY_FLOORS) {
+            for (Visitor visitor : floor.getVisitorsArray()) {
+                visitor.tick();
+            }
+        }
+    }
+    
 }//class FloorBank
