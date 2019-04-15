@@ -8,14 +8,16 @@ public class Elevator2 {
     public int MAX_FLOOR;
     public int MY_CAPACITY;
     public int MY_IDENTIFIER; //column the elevator resides in
+    //public boolean IS_AVAILABLE;
     
     public ArrayList<Visitor> PASSENGERS = new ArrayList();
     
-    public Elevator2(int capacity, int ID, int startingFloor, int maxFloor) {
+    public Elevator2(int capacity, int ID, int startingFloor, int maxFloor/*, boolean isAvailable*/) {
         this.MY_CAPACITY = capacity;
         this.MY_IDENTIFIER = ID;
         this.CURRENT_FLOOR = startingFloor;
         this.MAX_FLOOR = maxFloor;
+        //this.IS_AVAILABLE = isAvailable;
         /*System.out.println("hello from elevator " + MY_IDENTIFIER + ". "
                 + "I currently have " + PASSENGERS.size() + " passengers "
                 + "and I am on floor " + CURRENT_FLOOR);*/

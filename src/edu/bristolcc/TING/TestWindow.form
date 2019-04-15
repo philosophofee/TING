@@ -52,6 +52,8 @@
                       <Component id="btnUpdateTable" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnShowVisitors" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnShowPassengers" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -87,6 +89,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnUpdateTable" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnShowVisitors" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnShowPassengers" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
           </Group>
@@ -190,6 +193,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowVisitorsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnShowPassengers">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Show Passengers"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowPassengersActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -11,7 +11,7 @@ public class TestWindow extends javax.swing.JFrame {
     public TestWindow() {
         initComponents();
         floorBank.instantiate(bigTable.getModel().getRowCount());
-        elevatorBank = new ElevatorBank(bigTable.getModel().getColumnCount() - 1, bigTable.getModel().getRowCount()); //because the floor column doesn't count
+        elevatorBank = new ElevatorBank(bigTable.getModel().getColumnCount() - 1, bigTable.getModel().getRowCount()/*, true*/); //because the floor column doesn't count
     }
 
     public void update() {
@@ -62,6 +62,7 @@ public class TestWindow extends javax.swing.JFrame {
         btnMovePassenger = new javax.swing.JButton();
         btnRunFullTick = new javax.swing.JButton();
         btnShowVisitors = new javax.swing.JButton();
+        btnShowPassengers = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -144,6 +145,13 @@ public class TestWindow extends javax.swing.JFrame {
             }
         });
 
+        btnShowPassengers.setText("Show Passengers");
+        btnShowPassengers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowPassengersActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,6 +182,8 @@ public class TestWindow extends javax.swing.JFrame {
                         .addComponent(btnUpdateTable)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnShowVisitors)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnShowPassengers)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -202,7 +212,8 @@ public class TestWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUpdateTable)
-                    .addComponent(btnShowVisitors))
+                    .addComponent(btnShowVisitors)
+                    .addComponent(btnShowPassengers))
                 .addGap(97, 97, 97))
         );
 
@@ -260,19 +271,32 @@ public class TestWindow extends javax.swing.JFrame {
                 }
             }
         }
+        //elevatorBank.elevatorIsAvaliable();
         System.out.println("\n");
     }//GEN-LAST:event_btnShowVisitorsActionPerformed
+
+    private void btnShowPassengersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowPassengersActionPerformed
+        for (int j = 0; j < elevatorBank.getElevatorsArray().size(); ++j) {
+            for (int i = 0; i < elevatorBank.getElevatorsArray().get(j).getPassengersArray().size(); ++i) {
+                System.out.println("Passenger " + elevatorBank.getElevatorsArray().get(j).getPassengersArray().get(i) + " wants to go to floor " + elevatorBank.getElevatorsArray().get(j).getPassengersArray().get(i).DESTINATION + "+1");
+            }
+        }
+        //elevatorBank.elevatorIsAvaliable();
+        System.out.println("\n");
+    }//GEN-LAST:event_btnShowPassengersActionPerformed
 
     public void moveOnToElevator() {
 
         /*RIGHT NOW THIS ONLY WORKS FOR 1 ELEVATOR*/
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
             for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
-                if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < 10)) {
-                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-                        if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).MY_FLOOR != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
+                if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
+                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
+                        if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+
                             elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
                             floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
+
                             //System.out.println(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
                         }
                     }
@@ -285,19 +309,18 @@ public class TestWindow extends javax.swing.JFrame {
 
         /*RIGHT NOW THIS ONLY WORKS FOR 1 ELEVATOR*/
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
-            if ((elevatorBank.getElevatorsArray().get(0).getPassengerCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() <= 10)) {
-                if (floorBank.getFloorsArray().get(i).FLOOR_LEVEL == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-                    for (int j = 0; j < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++j) {
-                        floorBank.getFloorsArray().get(i).recieveVisitorFromElevator(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
+            if ((elevatorBank.getElevatorsArray().get(0).getPassengerCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() <= elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
+                
+                for (int j = 0; j < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++j) {
+                    if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION) {
+                        floorBank.getFloorsArray().get(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION).recieveVisitorFromElevator(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
                         
-
-                        for (int k = 0; k < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++k) {
-                            if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_FLOOR) {
-                                elevatorBank.getElevatorsArray().get(0).swipeVisitorOff(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
-  
-                                floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).setMY_FLOOR(floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION);
+                        if (floorBank.getFloorsArray().get(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION).getVisitorsArray().contains(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j))) {
+                            for (int k = 0; k < floorBank.getFloorsArray().get(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION).getVisitorsArray().size(); ++k) {
+                                floorBank.getFloorsArray().get(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION).getVisitorsArray().get(k).setMY_FLOOR(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j).DESTINATION);
                             }
                         }
+                        elevatorBank.getElevatorsArray().get(0).swipeVisitorOff(elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(j));
                     }
                 }
             }
@@ -338,6 +361,7 @@ public class TestWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnMovePassenger;
     private javax.swing.JButton btnMoveVisitor;
     private javax.swing.JButton btnRunFullTick;
+    private javax.swing.JButton btnShowPassengers;
     private javax.swing.JButton btnShowVisitors;
     private javax.swing.JButton btnUpdateTable;
     private javax.swing.JScrollPane jScrollPane1;
