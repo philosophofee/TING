@@ -2,7 +2,7 @@ package edu.bristolcc.TING;
 
 public class ThreadAnimation2 implements Runnable {
 
-    private static long ANIMATION_TIMEOUT_MS = 1000; // half second
+    private static long ANIMATION_TIMEOUT_MS = 500; // half second
     private Controller2 controller;
     public int count;
 

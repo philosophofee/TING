@@ -23,30 +23,31 @@ public class TestWindow extends javax.swing.JFrame {
 
         /*RIGHT NOW THIS ONLY WORKS 1 ELEVATOR*/
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
-            if (floorBank.getFloorsArray().get(i).getVisitorCount() > 0) {
-                for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
-                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
-                        elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR())));
-                        if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
+
+            //if (floorBank.getFloorsArray().get(i).getVisitorCount() > 0) {
+            for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorCount(); ++m) {
+                if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
+                    elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR())));
+                    if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR()) {
                             //System.out.println("\nFloor Object of Visitor: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m) + "(Before Elevator)");
-                            //System.out.println("Floor that Visitor is on: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() + "+1 should = orignal floor ");
-                            moveOnToElevator();
+                        //System.out.println("Floor that Visitor is on: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() + "+1 should = orignal floor ");
+                        moveOnToElevator();
 
-                            for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengersArray().size(); ++k) {
+                        for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengersArray().size(); ++k) {
                                 //System.out.println("Elevator Object of Visitor: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k) + "(In Elevator)");
-                                //System.out.println("Visitors Destination according to Elevator: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "+1");
+                            //System.out.println("Visitors Destination according to Elevator: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "+1");
 
-                                elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION)));
-                                if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-                                    moveOffOfElevator();
-                                }
+                            elevatorBank.moveElevator(0, -((elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) - (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION)));
+                            if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+                                moveOffOfElevator();
                             }
                         }
                     }
                 }
-                updateTable();
             }
+            updateTable();
         }
+        //}
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +155,7 @@ public class TestWindow extends javax.swing.JFrame {
 
         lblElevators.setText("Elevators:");
 
-        btnConfigureGrid.setText("Populate Table (Work on bounds)");
+        btnConfigureGrid.setText("Populate Table");
         btnConfigureGrid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnConfigureGridActionPerformed(evt);
@@ -547,22 +548,27 @@ public class TestWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
 
     private void btnResetTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetTableActionPerformed
-        controller.resetAnimation(/*bigTable*/);
-        generateNewTable(4/*elevators*/, 5/*floors*/);
         elevatorBank.getElevatorsArray().get(0).getPassengersArray().clear();
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
             floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
         }
+        generateNewTable(4/*elevators*/, 5/*floors*/);
+        floorBank.instantiate(5);
+        controller.resetAnimation(/*bigTable*/);
+        pnlStats.setScores(null);
     }//GEN-LAST:event_btnResetTableActionPerformed
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
         try {
+            int elevators = Integer.parseInt(txtElevators.getText());
+            int floors = Integer.parseInt(txtFloors.getText());
             elevatorBank.getElevatorsArray().get(0).getPassengersArray().clear();
             for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
                 floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
             }
-            generateNewTable((Integer.parseInt(txtElevators.getText())), (Integer.parseInt(txtFloors.getText())));
-            controller.resetAnimation(/*bigTable*/);
+            generateNewTable(elevators, floors);
+            floorBank.instantiate(floors);
+            controller.resetAnimation();
             pnlStats.setScores(null);
         } catch (NumberFormatException ex) {
             controller.pauseAnimation();

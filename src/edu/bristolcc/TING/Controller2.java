@@ -39,6 +39,11 @@ public class Controller2 {
         }
     }//startAnimation
 
+    public void pauseAnimation() {
+        simulationStatus = false;
+        th.suspend();
+    }//stopAnimation
+
     public void resetAnimation(/*JTable table*/) {
         simulationStatus = false;
         th.suspend();
@@ -50,11 +55,6 @@ public class Controller2 {
          }
          */
     }//resetAnimation
-
-    public void pauseAnimation() {
-        simulationStatus = false;
-        th.suspend();
-    }//stopAnimation
 
     public void animate() {
         java.awt.EventQueue.invokeLater(new Runnable() {
