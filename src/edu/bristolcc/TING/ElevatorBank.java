@@ -9,6 +9,9 @@ public class ElevatorBank {
     public int MAX_FLOORS;
     //public boolean IS_AVAILABLE;
 
+    /*public ElevatorBank() {
+    }//ElevatorBank*/
+    
     public ElevatorBank(int elevatorCount, int maxFloor/*, boolean isAvailable*/) {
         this.ELEVATOR_COUNT = elevatorCount;
         this.MAX_FLOORS = maxFloor - 1; //for tables sake
