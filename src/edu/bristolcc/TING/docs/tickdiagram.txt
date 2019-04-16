@@ -5,35 +5,121 @@ TICK 0
 ------------
 Elevator A (0): Floor 0. State: Idle
 Elevator B (0): Floor 0. State: Idle
-Passenger A (wants 3): Floor 0. State: Waiting
-Passenger B (wants 2): Floor 0. State: Waiting
-Passenger C (wants 1): Floor 0. State: Waiting
+Passenger A (wants 3): Floor 0. State: In queue 0
+Passenger B (wants 2): Floor 0. State: In queue 1
+Passenger C (wants 1): Floor 0. State: In queue 2
+ArrayList<Visitor> queue: A, B, C
+ArrayList<Integer> destinations[A] = null
+ArrayList<Integer> destinations[B] = null
+
 
 TICK 1
 ----------
-Elevator A (0): Floor 0. State: Loading
+Elevator A (1): Floor 0. State: Loading
 Elevator B (0): Floor 0. State: Idle
 Passenger A (wants 3): Floor 0. State: Riding (A)
-Passenger B (wants 2): Floor 0. State: Waiting
-Passenger C (wants 1): Floor 0. State: Waiting
+Passenger B (wants 2): Floor 0. State: In queue 0
+Passenger C (wants 1): Floor 0. State: In queue 1
+ArrayList<Visitor> queue: B, C
+ArrayList<Integer> destinations[A] = 3
+ArrayList<Integer> destinations[B] = null
 
 TICK 2
 ----------
-Elevator A (0): Floor 0. State: Full (start queue)
+Elevator A (2): Floor 0. State: Full (start queue) TRIGGER ELEVATOR B LOADING
 Elevator B (0): Floor 0. State: Loading
 Passenger A (wants 3): Floor 0. State: Riding (A)
 Passenger B (wants 2): Floor 0. State: Riding (A)
-Passenger C (wants 1): Floor 0. State: Riding (B)
+Passenger C (wants 1): Floor 0. State: In queue 0 - thinks "oh, elevator A is full - check elevator B"
+ArrayList<Visitor> queue: C
+ArrayList<Integer> destinations[A] = 3, 2
+ArrayList<Integer> destinations[B] = null
 
-TICK 2
+
+TICK 3
 ----------
-Elevator A (0): Floor 1. State: Full (start queue)
-Elevator B (0): Floor 0. State: Loading
+Elevator A (2): Floor 1. State: Full (start queue) - Moving to floor 3 (first destination)
+Elevator B (1): Floor 0. State: Full (start queue) - thinks "oh, no more visitors on this floor"
 Passenger A (wants 3): Floor 1. State: Riding (A)
 Passenger B (wants 2): Floor 1. State: Riding (A)
 Passenger C (wants 1): Floor 0. State: Riding (B)
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 3, 2
+ArrayList<Integer> destinations[B] = 1
 
 
+TICK 4
+----------
+Elevator A (2): Floor 2. State: Full (start queue) - Moving to floor 3 (first destination)
+Elevator B (1): Floor 1. State: Full (start queue) - Moving to floor 1 (first destination) - stop moving next tick
+Passenger A (wants 3): Floor 2. State: Riding (A)
+Passenger B (wants 2): Floor 2. State: Riding (A) - DESPITE wanting 2, he has to wait for passenger A to get off first
+Passenger C (wants 1): Floor 1. State: Riding (B)
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 3, 2
+ArrayList<Integer> destinations[B] = 1
+
+
+TICK 5
+----------
+Elevator A (2): Floor 3. State: Full (start queue) - Moving to floor 3 (first destination) - stop moving next tick
+Elevator B (0): Floor 1. State: Arrived. Visitor has left elevator
+Passenger A (wants 3): Floor 3. State: Riding (A)
+Passenger B (wants 2): Floor 3. State: Riding (A) 
+Passenger C (wants 1): Floor 1. State: Arrived. Get off elevator. 
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 3, 2
+ArrayList<Integer> destinations[B] = null
+
+
+TICK 6
+----------
+Elevator A (1): Floor 3. State: Arrived. Next tick will move again. 
+Elevator B (0): Floor 1. State: Idle
+Passenger A (wants 3): Floor 3. State: Arrived. Visitor has left elevator
+Passenger B (wants 2): Floor 3. State: Riding (A) 
+Passenger C (wants 1): Floor 1. State: Arrived 
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 2
+ArrayList<Integer> destinations[B] = null
+
+
+TICK 7
+----------
+Elevator A (1): Floor 3. State: Full (start queue)
+Elevator B (0): Floor 1. State: Idle
+Passenger A (wants 3): Floor 3. State: Arrived. Visitor has left elevator
+Passenger B (wants 2): Floor 3. State: Riding (A) 
+Passenger C (wants 1): Floor 1. State: Arrived 
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 2
+ArrayList<Integer> destinations[B] = null
+
+
+TICK 7
+----------
+Elevator A (1): Floor 2. State: Full (start queue) - visitor will get off next tick
+Elevator B (0): Floor 1. State: Idle
+Passenger A (wants 3): Floor 3. State: Arrived
+Passenger B (wants 2): Floor 2. State: Riding (A) 
+Passenger C (wants 1): Floor 1. State: Arrived 
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = 2
+ArrayList<Integer> destinations[B] = null
+
+
+TICK 8
+----------
+Elevator A (0): Floor 2. State: Arrived.
+Elevator B (0): Floor 1. State: Idle
+Passenger A (wants 3): Floor 3. State: Arrived
+Passenger B (wants 2): Floor 2. State: Arrived. Visitor has left elevator
+Passenger C (wants 1): Floor 1. State: Arrived 
+ArrayList<Visitor> queue: null
+ArrayList<Integer> destinations[A] = null
+ArrayList<Integer> destinations[B] = null
+
+SIMULATION IS OVER
 
 
 
