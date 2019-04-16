@@ -1,0 +1,50 @@
+ELEVATOR A CAPACITY = 2
+ELEVATOR B CAPACITY = 2
+
+TICK 0
+------------
+Elevator A (0): Floor 0. State: Idle
+Elevator B (0): Floor 0. State: Idle
+Passenger A (wants 3): Floor 0. State: Waiting
+Passenger B (wants 2): Floor 0. State: Waiting
+Passenger C (wants 1): Floor 0. State: Waiting
+
+TICK 1
+----------
+Elevator A (0): Floor 0. State: Loading
+Elevator B (0): Floor 0. State: Idle
+Passenger A (wants 3): Floor 0. State: Riding (A)
+Passenger B (wants 2): Floor 0. State: Waiting
+Passenger C (wants 1): Floor 0. State: Waiting
+
+TICK 2
+----------
+Elevator A (0): Floor 0. State: Full (start queue)
+Elevator B (0): Floor 0. State: Loading
+Passenger A (wants 3): Floor 0. State: Riding (A)
+Passenger B (wants 2): Floor 0. State: Riding (A)
+Passenger C (wants 1): Floor 0. State: Riding (B)
+
+TICK 2
+----------
+Elevator A (0): Floor 1. State: Full (start queue)
+Elevator B (0): Floor 0. State: Loading
+Passenger A (wants 3): Floor 1. State: Riding (A)
+Passenger B (wants 2): Floor 1. State: Riding (A)
+Passenger C (wants 1): Floor 0. State: Riding (B)
+
+
+
+
+
+ELEVATOR STATES: 
+Idle: Elevator is waiting for visitors
+Loading: Visitors on floor must load in. If one tick goes by where no visitors enter, start queue.
+Full/ready: Starting queue of visitor destinations in order of entry
+
+
+VISITOR STATES:
+Waiting: Visitor is waiting
+Boarding: Visitor is in queue to enter elevator
+Riding: Visitor is in elevator
+Arrived: Visitor has arrived at their destination
