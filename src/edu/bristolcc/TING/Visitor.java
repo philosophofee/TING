@@ -37,11 +37,11 @@ public class Visitor {
         }
 
         if (MY_STATUS == VisitorStatus.BOARDING) {
-            System.out.println("Hello from " + MY_NAME + ". I am currently at my destination, floor " + DESTINATION);
+            System.out.println("Hello from " + MY_NAME + ". I am currently boarding an elevator on floor " + MY_FLOOR);
         }
 
         if (MY_STATUS == VisitorStatus.RIDING) {
-            System.out.println("Hello from " + MY_NAME + ". I am currently riding and I would like to go to floor " + DESTINATION + ". my current floor is " + MY_FLOOR);
+            System.out.println("Hello from " + MY_NAME + ". I am currently riding and I would like to go to floor " + DESTINATION);
         }
 
         if (MY_STATUS == VisitorStatus.ARRIVED) {

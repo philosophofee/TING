@@ -42,16 +42,10 @@ public class Controller2 {
         th.suspend();
     }//stopAnimation
 
-    public void resetAnimation(/*JTable table*/) {
+    public void resetAnimation() {
         simulationStatus = false;
         th.suspend();
         animationThread.setCount(0);
-        /*
-         elevatorBank.getElevatorsArray().get(0).getPassengersArray().clear();
-         for(int i = 0; i < table.getModel().getRowCount();++i){
-         floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
-         }
-         */
     }//resetAnimation
 
     public void animate() {

@@ -15,6 +15,7 @@ public class Elevator2 {
     public int MY_IDENTIFIER; //column the elevator resides in
     public ElevatorStatus MY_STATUS;
 
+    public ArrayList<Visitor> QUEUE = new ArrayList();
     public ArrayList<Visitor> PASSENGERS = new ArrayList();
 
     public Elevator2(int capacity, int ID, int startingFloor, int maxFloor/*, boolean isAvailable*/) {
