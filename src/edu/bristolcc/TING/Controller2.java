@@ -17,8 +17,6 @@ public class Controller2 {
 
     Controller2 controller;
     private TestWindow window;
-    //private ElevatorBank elevatorBank = new ElevatorBank();
-    //private FloorBank floorBank = new FloorBank();
     public ThreadAnimation2 animationThread = new ThreadAnimation2(this);
     Thread th = new Thread(animationThread);
 
@@ -63,6 +61,10 @@ public class Controller2 {
             }
         });
     }//animate
+
+    public int giveCount() {
+        return animationThread.getCount();
+    }
 
     public void saveScenario(JTable table, File file) {
         try {
