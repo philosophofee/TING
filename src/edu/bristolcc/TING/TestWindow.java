@@ -33,55 +33,49 @@ public class TestWindow extends javax.swing.JFrame {
                                 if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_STATUS.toString().equals("WAITING")) {
                                     System.out.println("Visitor " + k + "(wants " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION + "): Floor " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_FLOOR + ". State: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_STATUS);
                                     moveOnToElevator(bigTable.getRowCount() - 1, k);
-                                    updateTable();
-                                    elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.FULL);
+                                    elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.MOVE_UP);
                                     updateTable();
                                 }
                             }
-
                         }
-                    } else if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_FLOOR == floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION) {
-                        System.out.println("Visitor " + k + "(wants " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION + "): Floor " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_FLOOR + ". State: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_STATUS);
-                        if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
-                            int MOVE_DOWN = 1;
-                            updateTable();
-                            elevatorBank.moveElevator(0, MOVE_DOWN);
-                            updateTable();
-                        }
-                    } else {
-                        //do nothing
                     }
                 }
             }
         }
 
         if ((elevatorBank.getElevatorsArray().get(0).getPassengerCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() <= elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
-            if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR != 0) {
-                if (elevatorBank.getElevatorsArray().get(0).MY_STATUS.toString().equalsIgnoreCase("LOADING")) {
-                } else {
-                    int MOVE_UP = -1;
-                    elevatorBank.moveElevator(0, MOVE_UP);
-                    updateTable();
-                    elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.FULL);
-                    updateTable();
-                    System.out.println("\nTICK " + controller.giveCount() + "\n----------\nElevator" + 0 + "(" + elevatorBank.getElevatorsArray().get(0).getPassengerCount() + ") : Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).MY_STATUS);
+            if (elevatorBank.getElevatorsArray().get(0).MY_STATUS.toString().equalsIgnoreCase("MOVE_UP")) {
+                int MOVE_UP = -1;
+                elevatorBank.moveElevator(0, MOVE_UP);
+                updateTable();
+                System.out.println("\nTICK " + controller.giveCount() + "\n----------\nElevator" + 0 + "(" + elevatorBank.getElevatorsArray().get(0).getPassengerCount() + ") : Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).MY_STATUS);
 
-                    for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++k) {
-                        System.out.println("Passenger " + k + "(wants " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "): Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).MY_STATUS);
-                        if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-                            //get off elevator   
-                            moveOffOfElevator(k);
-                            updateTable();
-                            elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.IDLE);
-                            updateTable();
-                        }
+                for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++k) {
+                    System.out.println("Passenger " + k + "(wants " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "): Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).MY_STATUS);
+                    if (elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+                        //get off elevator   
+                        updateTable();
+                        moveOffOfElevator(k);
+                        updateTable();
+                        elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
                     }
                 }
-            } else {
-                System.out.println("\nTICK " + controller.giveCount() + "\n----------\nElevator" + 0 + "(" + elevatorBank.getElevatorsArray().get(0).getPassengerCount() + ") : Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).MY_STATUS);
             }
         } else {
+            if (elevatorBank.getElevatorsArray().get(0).MY_STATUS.toString().equalsIgnoreCase("MOVE_DOWN")) {
+                if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
+                    int MOVE_DOWN = 1;
+                    elevatorBank.moveElevator(0, MOVE_DOWN);
+                    updateTable();
+                    if (elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR == floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
+                        elevatorBank.getElevatorsArray().get(0).setMY_STATUS(ElevatorStatus.IDLE);
+                    }
+                }
+            }
             System.out.println("\nTICK " + controller.giveCount() + "\n----------\nElevator" + 0 + "(" + elevatorBank.getElevatorsArray().get(0).getPassengerCount() + ") : Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).MY_STATUS);
+            for (int k = 0; k < elevatorBank.getElevatorsArray().get(0).getPassengerCount(); ++k) {
+                System.out.println("Passenger " + k + "(wants " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).DESTINATION + "): Floor " + elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(0).getPassengersArray().get(k).MY_STATUS);
+            }
         }
     }//update
 
@@ -572,27 +566,31 @@ public class TestWindow extends javax.swing.JFrame {
 
     public void addVisitors() {
         /*generate random amount of visitors 0 through 20 sthat come into ground floor*/
-        //Random rand = new Random();
-        //int random_integer = rand.nextInt(20 - 0) + 0;
+        Random rand = new Random();
+        int random_integer = rand.nextInt(20 - 0) + 0;
 
-        //for (int i = 0; i < 4; ++i) {
-        floorBank.getFloorsArray().get(bigTable.getModel().getRowCount() - 1).addVisitorToFloor(bigTable.getModel().getRowCount() - 1);
-        //}
+        for (int i = 0; i < random_integer; ++i) {
+            floorBank.getFloorsArray().get(bigTable.getModel().getRowCount() - 1).addVisitorToFloor(bigTable.getModel().getRowCount() - 1);
+        }
     }//addVisitors
 
     public void moveOnToElevator(int i, int m) {
 
         /*RIGHT NOW THIS ONLY WORKS FOR 1 ELEVATOR*/
-        //if floor i's visitor count is greater than 0 and the FIRST elevator has less passengers than its capacity
-        if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
-            if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
-                if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
-                    elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
-                    floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
+        /*for (int i = 0; i < floorBank.getFloorsArray().size(); ++i) {
+            for (int m = 0; m < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++m) {*/
+                //if floor i's visitor count is greater than 0 and the FIRST elevator has less passengers than its capacity
+                if ((floorBank.getFloorsArray().get(i).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(0).getPassengerCount() < elevatorBank.getElevatorsArray().get(0).MY_CAPACITY)) {
+                    if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() != floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).DESTINATION) {
+                        if (floorBank.getFloorsArray().get(i).getVisitorsArray().get(m).getMY_FLOOR() == elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR) {
+                            elevatorBank.getElevatorsArray().get(0).swipeVisitorOn(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
+                            floorBank.getFloorsArray().get(i).giveVisitorToElevator(floorBank.getFloorsArray().get(i).getVisitorsArray().get(m));
 
+                        }
+                    }
                 }
-            }
-        }
+            //}
+        //}
     }//moveOnToElevator
 
     public void moveOffOfElevator(int j) {
@@ -630,7 +628,6 @@ public class TestWindow extends javax.swing.JFrame {
 
         bigTable.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
 
-        //adjustTableColumns();
     }//generateNewTable
 
     private void updateTable() {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 enum ElevatorStatus {
 
-    IDLE, LOADING, FULL;
+    IDLE, LOADING, MOVE_UP, MOVE_DOWN;
 }
 
 public class Elevator2 {
