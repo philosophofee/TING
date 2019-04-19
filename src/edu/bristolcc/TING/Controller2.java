@@ -60,6 +60,7 @@ public class Controller2 {
         return animationThread.getCount();
     }
 
+    /*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"*/
     public void saveScenario(JTable table, File file) {
         try {
             //get information about the table right now
@@ -98,6 +99,7 @@ public class Controller2 {
         }
     }//saveScenario
 
+    /*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"*/
     public void loadScenario(JTable table, File file) {
         try {
             //get file the user loaded in and turn it into an inputstream

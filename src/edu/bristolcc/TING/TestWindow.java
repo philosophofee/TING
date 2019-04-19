@@ -14,27 +14,28 @@ public class TestWindow extends javax.swing.JFrame {
         initComponents();
         this.controller = controller;
         floorBank.instantiate(bigTable.getModel().getRowCount());
-        elevatorBank = new ElevatorBank(bigTable.getModel().getColumnCount() - 1, bigTable.getModel().getRowCount()/*, true*/); //because the floor column doesn't count
-        //elevatorBank.instantiate(bigTable.getModel().getColumnCount());
+        elevatorBank = new ElevatorBank(/*bigTable.getModel().getColumnCount() - 1,*/bigTable.getModel().getRowCount()); //because the floor column doesn't count
+        elevatorBank.instantiate(bigTable.getModel().getColumnCount(), bigTable.getModel().getRowCount() - 1);
         updateTable();
         System.out.println("\nTICK " + controller.giveCount() + "\n----------");
         for (int i = 0; i < elevatorBank.getElevatorsArray().size(); ++i) {
-            System.out.println(/*"\nTICK " + controller.giveCount() + "\n----------\n*/"Elevator " + elevatorBank.getElevatorsArray().get(i).MY_IDENTIFIER + " (" + elevatorBank.getElevatorsArray().get(i).getPassengerCount() + "): Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).MY_STATUS);
+            System.out.println("Elevator " + elevatorBank.getElevatorsArray().get(i).MY_IDENTIFIER + " (" + elevatorBank.getElevatorsArray().get(i).getPassengerCount() + "): Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).MY_STATUS);
         }
     }
 
     public void update() {
 
+        /*Add random number of visitors to ground floor*/
         //addVisitors();
-
+        //print beginning of tick for each tick
         System.out.println("\nTICK " + controller.giveCount() + "\n----------");
         //print all elevators and their status
-        for (int i = 0; i < elevatorBank.getElevatorsArray().size(); ++i) {
+        for (int i = 0; i < elevatorBank.getElevatorsArray().size()-1; ++i) {
             System.out.println("Elevator" + i + "(" + elevatorBank.getElevatorsArray().get(i).getPassengerCount() + ") : Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).MY_STATUS);
         }
 
         //print all passengers in all elevators and their status
-        for (int i = 0; i < elevatorBank.getElevatorsArray().size(); ++i) {
+        for (int i = 0; i < elevatorBank.getElevatorsArray().size()-1; ++i) {
             for (int k = 0; k < elevatorBank.getElevatorsArray().get(i).getPassengerCount(); ++k) {
                 System.out.println("Passenger " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).MY_NAME + "(wants " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).DESTINATION + "): Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).MY_STATUS);
             }
@@ -48,7 +49,7 @@ public class TestWindow extends javax.swing.JFrame {
         }
 
         //move visitor onto elevator if elevator is IDLE meaning ground floor and change state to MOVE_UP
-        for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
+        for (int e = 0; e < elevatorBank.getElevatorsArray().size()-1; ++e) {
             if (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.IDLE) {
                 for (int v = 0; v < floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).getVisitorCount(); ++v) {
                     if (floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).getVisitorsArray().get(v).MY_STATUS == VisitorStatus.WAITING) {
@@ -61,32 +62,32 @@ public class TestWindow extends javax.swing.JFrame {
         }
 
         //move elevator up by 1 each tick
-        for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
+        for (int e = 0; e < elevatorBank.getElevatorsArray().size()-1; ++e) {
             if ((elevatorBank.getElevatorsArray().get(e).getPassengerCount() > 0) && (elevatorBank.getElevatorsArray().get(e).getPassengerCount() <= elevatorBank.getElevatorsArray().get(e).MY_CAPACITY)) {
+                if(elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == floorBank.getFloorsArray().get(bigTable.getRowCount()-1).FLOOR_LEVEL){
+                elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_UP);
+                }
                 if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_UP)) {
                     int MOVE_UP = -1;
                     elevatorBank.moveElevator(e, MOVE_UP);
                     updateTable();
                 }
             }
-            if ((elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == 0) && (elevatorBank.getElevatorsArray().get(e).getPassengerCount() > 0)) {
-                elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
-            }//THIS IS A TEMPORARY FIX FOR ELEVATOR GETTING STUCK AT TOP FLOOR WITH PASSENGER STILL ON IT
         }
 
         //move passenger off of elevator and if passenger count equals 0 change state to MOVE_DOWN
-        for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
+        for (int e = 0; e < elevatorBank.getElevatorsArray().size()-1; ++e) {
             for (int k = 0; k < elevatorBank.getElevatorsArray().get(e).getPassengerCount(); ++k) {
                 if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == elevatorBank.getElevatorsArray().get(e).getPassengersArray().get(k).DESTINATION) {
                     //get off elevator
                     moveOffOfElevator(k, e);
                     updateTable();
-                    if (elevatorBank.getElevatorsArray().get(e).getPassengerCount() == 0) {
+                    if ((elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == 0)) {
+                        elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
+                    } else if (elevatorBank.getElevatorsArray().get(e).getPassengerCount() == 0) {
                         elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
                     }
-                    if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == 0) {
-                        elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
-                    }
+                    
                 }
             }
             if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == 0) {
@@ -95,7 +96,7 @@ public class TestWindow extends javax.swing.JFrame {
         }
 
         //move elevator down by 1 each tick and if the elevator hits ground floor change state to IDLE
-        for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
+        for (int e = 0; e < elevatorBank.getElevatorsArray().size()-1; ++e) {
             if (elevatorBank.getElevatorsArray().get(e).getPassengerCount() == 0) {
                 if (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) {
                     if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
@@ -108,7 +109,7 @@ public class TestWindow extends javax.swing.JFrame {
                     }
                 }
             } else { //THIS IS A TEMPORARY FIX FOR ELEVATOR GETTING STUCK AT TOP FLOOR WITH PASSENGER STILL ON IT
-                if (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) {
+                if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) && (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) && (elevatorBank.getElevatorsArray().get(e).getPassengerCount() > 0)) {
                     if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
                         int MOVE_DOWN = 1;
                         elevatorBank.moveElevator(e, MOVE_DOWN);
@@ -151,8 +152,8 @@ public class TestWindow extends javax.swing.JFrame {
         btnUpdateTable = new javax.swing.JButton();
         tfFPS = new javax.swing.JTextField();
         lblSpeed = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnShowVisitors = new javax.swing.JButton();
+        btnShowPassengers = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TING Elevator Simulation");
@@ -364,17 +365,17 @@ public class TestWindow extends javax.swing.JFrame {
         lblSpeed.setText("Animation Speed (ms):");
         lblSpeed.setToolTipText("");
 
-        jButton1.setText("Show Visitors");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnShowVisitors.setText("Show Visitors");
+        btnShowVisitors.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnShowVisitorsActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Show Passengers");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnShowPassengers.setText("Show Passengers");
+        btnShowPassengers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnShowPassengersActionPerformed(evt);
             }
         });
 
@@ -387,11 +388,11 @@ public class TestWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlDEBUGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblSpeed)
-                    .addComponent(jButton1))
+                    .addComponent(btnShowVisitors))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlDEBUGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlDEBUGLayout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnShowPassengers)
                         .addGap(18, 18, 18)
                         .addComponent(btnUpdateTable))
                     .addComponent(tfFPS, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -404,8 +405,8 @@ public class TestWindow extends javax.swing.JFrame {
                 .addComponent(btnAddVisitor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDEBUGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(btnShowVisitors)
+                    .addComponent(btnShowPassengers)
                     .addComponent(btnUpdateTable))
                 .addGap(11, 11, 11)
                 .addGroup(pnlDEBUGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -493,13 +494,15 @@ public class TestWindow extends javax.swing.JFrame {
         for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
             elevatorBank.getElevatorsArray().get(e).getPassengersArray().clear();
         }
+        elevatorBank.getElevatorsArray().clear();
         for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
             floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
         }
+        floorBank.getFloorsArray().clear();
         generateNewTable(4/*elevators*/, 5/*floors*/);
         floorBank.instantiate(5);
-        //elevatorBank.instantiate(4);
-        controller.resetAnimation(/*bigTable*/);
+        elevatorBank.instantiate(4, bigTable.getModel().getRowCount() - 1);
+        controller.resetAnimation();
         pnlStats.setScores(null);
         updateTable();
     }//GEN-LAST:event_btnResetTableActionPerformed
@@ -512,12 +515,14 @@ public class TestWindow extends javax.swing.JFrame {
             for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
                 elevatorBank.getElevatorsArray().get(e).getPassengersArray().clear();
             }
+            elevatorBank.getElevatorsArray().clear();
             for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
                 floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
             }
+            floorBank.getFloorsArray().clear();
             generateNewTable(elevators, floors);
             floorBank.instantiate(floors);
-            //elevatorBank.instantiate(elevators);
+            elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
             controller.resetAnimation();
             pnlStats.setScores(null);
             updateTable();
@@ -532,23 +537,23 @@ public class TestWindow extends javax.swing.JFrame {
         //do nothing
     }//GEN-LAST:event_tfFPSActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnShowVisitorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowVisitorsActionPerformed
         //print all visitor on all floors and their status
         for (int i = 0; i < floorBank.getFloorsArray().size(); ++i) {
             for (int k = 0; k < floorBank.getFloorsArray().get(i).getVisitorsArray().size(); ++k) {
                 System.out.println("Visitor " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_NAME + "(wants " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).DESTINATION + "): Floor " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_FLOOR + ". State: " + floorBank.getFloorsArray().get(i).getVisitorsArray().get(k).MY_STATUS);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnShowVisitorsActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnShowPassengersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowPassengersActionPerformed
         //print all passengers in all elevators and their status
         for (int i = 0; i < elevatorBank.getElevatorsArray().size(); ++i) {
             for (int k = 0; k < elevatorBank.getElevatorsArray().get(i).getPassengerCount(); ++k) {
                 System.out.println("Passenger " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).MY_NAME + "(wants " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).DESTINATION + "): Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).getPassengersArray().get(k).MY_STATUS);
             }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnShowPassengersActionPerformed
 
     public void addVisitors() {
         /*generate random amount of visitors 0 through 5 that come into ground floor*/
@@ -652,11 +657,11 @@ public class TestWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnLoadScenario;
     private javax.swing.JButton btnResetTable;
     private javax.swing.JButton btnSaveScenario;
+    private javax.swing.JButton btnShowPassengers;
+    private javax.swing.JButton btnShowVisitors;
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;
     private javax.swing.JButton btnUpdateTable;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblElevators;
     private javax.swing.JLabel lblFloors;
