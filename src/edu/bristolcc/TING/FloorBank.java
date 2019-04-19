@@ -21,7 +21,9 @@ public class FloorBank {
     public void tick() {
         for (Floor floor : MY_FLOORS) {
             for (Visitor visitor : floor.getVisitorsArray()) {
-                visitor.tick();
+                
+                System.out.println("Visitor " + visitor.MY_NAME + "(wants " + visitor.DESTINATION + "): Floor " + visitor.MY_FLOOR + ". State: " + visitor.MY_STATUS);
+                //visitor.tick();
             }
         }
     }

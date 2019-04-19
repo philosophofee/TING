@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 enum ElevatorStatus {
 
-    IDLE, LOADING, MOVE_UP, MOVE_DOWN;
+    IDLE, LOADING, MOVE_UP, MOVE_DOWN, STOPPED;
 }
 
 public class Elevator2 {
@@ -15,7 +15,6 @@ public class Elevator2 {
     public int MY_IDENTIFIER; //column the elevator resides in
     public ElevatorStatus MY_STATUS;
 
-    public ArrayList<Visitor> QUEUE = new ArrayList();
     public ArrayList<Visitor> PASSENGERS = new ArrayList();
     public final String MY_NAME;
 
@@ -75,7 +74,8 @@ public class Elevator2 {
     public void tick() {
         //System.out.println("tick from elevator " + MY_IDENTIFIER + ". I currently have " + PASSENGERS.size() + " passengers and I am on floor " + CURRENT_FLOOR);
         for (Visitor visitor : PASSENGERS) {
-            visitor.tick();
+            System.out.println("Passenger " + visitor.MY_NAME + "(wants " + visitor.DESTINATION + "): Floor " + visitor.MY_FLOOR + ". State: " + visitor.MY_STATUS);
+            //visitor.tick();
         }
     }//tick
 
