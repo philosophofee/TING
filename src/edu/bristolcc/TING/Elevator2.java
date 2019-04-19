@@ -17,14 +17,16 @@ public class Elevator2 {
 
     public ArrayList<Visitor> QUEUE = new ArrayList();
     public ArrayList<Visitor> PASSENGERS = new ArrayList();
+    public final String MY_NAME;
 
-    public Elevator2(int capacity, int ID, int startingFloor, int maxFloor/*, boolean isAvailable*/) {
+    public Elevator2(int capacity, int ID, int startingFloor, int maxFloor) {
         this.MY_CAPACITY = capacity;
         this.MY_IDENTIFIER = ID;
         this.CURRENT_FLOOR = startingFloor;
         this.MAX_FLOOR = maxFloor;
         this.MY_STATUS = ElevatorStatus.IDLE;
-        //this.IS_AVAILABLE = isAvailable;
+        
+        this.MY_NAME = this.toString().replace("edu.bristolcc.TING.Visitor@", "");
         /*System.out.println("hello from elevator " + MY_IDENTIFIER + ". "
          + "I currently have " + PASSENGERS.size() + " passengers "
          + "and I am on floor " + CURRENT_FLOOR);*/

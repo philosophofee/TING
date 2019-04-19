@@ -12,12 +12,20 @@ public class ElevatorBank {
         this.ELEVATOR_COUNT = elevatorCount;
         this.MAX_FLOORS = maxFloor - 1; //for tables sake
         //System.out.println("Hello from elevator bank. It appears I will need to create " + ELEVATOR_COUNT + " elevators\n");
-
         for (int i = 0; i < ELEVATOR_COUNT; i++) {
-            Elevator2 elevatorToAdd = new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS/*, IS_AVAILABLE*/); //adding to the bottom
-            MY_ELEVATORS.add(elevatorToAdd);
+            //Elevator2 elevatorToAdd = new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS); //adding to the bottom
+            MY_ELEVATORS.add(new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS));
         }
     }//ElevatorBank
+
+    /*USE THIS TO FIX POPULATE/RESET TABLE GLITCH*/
+    /*public void instantiate(int elevators) {
+        ELEVATOR_COUNT = elevators;
+        for (int i = 0; i < ELEVATOR_COUNT; i++) {
+            //Elevator2 elevatorToAdd = new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS); //adding to the bottom
+            MY_ELEVATORS.add(new Elevator2(8, i, MAX_FLOORS, MAX_FLOORS));
+        }
+    }*/
 
     public ArrayList<Elevator2> getElevatorsArray() {
         return MY_ELEVATORS;

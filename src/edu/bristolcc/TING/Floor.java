@@ -11,7 +11,7 @@ public class Floor {
 
     public Floor(int level) {
         this.FLOOR_LEVEL = level;
-        System.out.println("Floor " + FLOOR_LEVEL + ". Has " + visitorsArray.size() + " visitors.");
+        //System.out.println("Floor " + FLOOR_LEVEL + ". Has " + visitorsArray.size() + " visitors.");
     }//Floor
 
     public int getVisitorCount() {
