@@ -1,8 +1,9 @@
 package edu.bristolcc.TING;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ElevatorBank {
+public class ElevatorBank implements Serializable {
 
     public ArrayList<Elevator2> MY_ELEVATORS = new ArrayList();
     public int ELEVATOR_COUNT;

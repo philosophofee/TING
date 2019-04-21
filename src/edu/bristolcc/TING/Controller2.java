@@ -6,24 +6,33 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.io.Serializable;
 import static java.lang.Thread.State.NEW;
 import static java.lang.Thread.State.TIMED_WAITING;
+import java.nio.file.Files;
 import java.util.Random;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class Controller2 implements Serializable{
+public class Controller2 {
 
     public boolean simulationStatus;
 
+    int VERSION_NUMBER = 1;
+    
     FloorBank floorBank = new FloorBank();
     ElevatorBank elevatorBank = new ElevatorBank();
     
     private TestWindow window;
     private JTable bigTable;
+    private JTable debugTable;
     public ThreadAnimation2 animationThread = new ThreadAnimation2(this);
-    Thread th = new Thread(animationThread);
+    public Thread th = new Thread(animationThread);
 
     public void setWindow(TestWindow window) {
         this.window = window;
@@ -36,6 +45,10 @@ public class Controller2 implements Serializable{
     public void setTable(JTable bigTable) {
         this.bigTable = bigTable;
     }//setTable
+    
+    public void setDebugTable(JTable debugTable) {
+        this.debugTable = debugTable;
+    }//setDebugTable
     
     public void instantiateFloor() {
         floorBank.instantiate(bigTable.getModel().getRowCount());
@@ -183,7 +196,11 @@ public class Controller2 implements Serializable{
 
         for (int i = 0; i < random_integer; ++i) {
             floorBank.getFloorsArray().get(bigTable.getModel().getRowCount() - 1).addVisitorToFloor(bigTable.getModel().getRowCount() - 1);
+            DefaultTableModel model = (DefaultTableModel) debugTable.getModel(); 
+            model.addRow(new Object[]{"", "", "", ""});
+            model.addRow(new Object[]{"", "", "", ""});
         }
+       
         updateTable();
     }//addVisitors
     
@@ -228,15 +245,28 @@ public class Controller2 implements Serializable{
             resetAnimation();
             updateTable();
     }//configureGrid
+
+    public void configureGrid2(int elevators, int floors){
+            window.generateNewTable(elevators, floors);
+            floorBank.instantiate(floors);
+            elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
+            updateTable();
+    }//configureGrid
     
     public void updateTable() {
+        
+        int debugNum = 0;
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
-            /*String daBoys = "";
+            //String daBoys = "";
              for (Visitor visitor : floorBank.getFloorsArray().get(i).getVisitorsArray() ) {
-             daBoys += visitor.MY_NAME + " | ";
+             debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
+             debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 1);
+             debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 2);
+             debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
+             debugNum+=1;
              }
-             bigTable.getModel().setValueAt(daBoys, i, 0);*/
+             //bigTable.getModel().setValueAt(daBoys, i, 0);*/
             //System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
         }
 
@@ -245,6 +275,13 @@ public class Controller2 implements Serializable{
                 //System.out.println(i + ", " + j + ", " + elevatorBank.getElevatorsArray().size());
                 if (elevatorBank.getElevatorsArray().get(j - 1).getMyFloor() == i) {
                     bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
+                    for (Visitor visitor : elevatorBank.getElevatorsArray().get(i).getPassengersArray() ) {
+                        debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
+                        debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 1);
+                        debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 2);
+                        debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
+                        debugNum+=1;
+                    }
                     /*String daBoys = "";
                      for (Visitor visitor : elevatorBank.getElevatorsArray().get(0).getPassengersArray() ) {
                      daBoys += visitor.MY_NAME + "|";
@@ -257,8 +294,171 @@ public class Controller2 implements Serializable{
         }
     }//updateTable
 
-/*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"*/
-public void saveScenario(JTable table, File file) {
+    public void saveScenario(File file) {
+        try {
+            
+            
+            
+            long size_elevator;
+            long size_floor;
+            
+            //Create temp files and hide them from the user because we're evil
+            File elevatorFile = new File(file.getParent() + "\\TING_temp_elevator");
+            if (elevatorFile.exists()) {
+                elevatorFile.delete();
+            }
+            
+            File floorFile = new File(file.getParent() + "\\TING_temp_floor");
+            if (floorFile.exists()) {
+                floorFile.delete();
+            }
+            
+            //Create output file streams for both of theses sub files
+            FileOutputStream elevatorFileOut = new FileOutputStream(elevatorFile);
+            FileOutputStream floorFileOut = new FileOutputStream(floorFile);
+
+            Files.setAttribute(elevatorFile.toPath(), "dos:hidden", true);
+            Files.setAttribute(floorFile.toPath(), "dos:hidden", true);
+            
+            ObjectOutputStream elevatorOut = new ObjectOutputStream(elevatorFileOut);
+            ObjectOutputStream floorOut = new ObjectOutputStream(floorFileOut);
+
+            
+            //objectOut.useProtocolVersion(VERSION_NUMBER);
+
+            elevatorOut.writeObject(elevatorBank);
+            size_elevator = elevatorFile.length();
+            System.out.println("size of elevator section should be " + size_elevator + " bytes");
+            
+            floorOut.writeObject(floorBank);
+            size_floor = floorFile.length();
+            System.out.println("size of floor section should be " + size_floor + " bytes");
+            
+            elevatorOut.close();
+            floorOut.close();
+            elevatorFileOut.close();
+            floorFileOut.close();
+            
+            FileInputStream elevatorInput = new FileInputStream(elevatorFile);
+            FileInputStream floorInput = new FileInputStream(floorFile);
+            FileOutputStream fileOutput = new FileOutputStream(file);
+            DataOutputStream bigData = new DataOutputStream(fileOutput);
+            bigData.writeLong(size_elevator);
+            bigData.writeLong(size_floor);
+            
+            int len = 0;
+            
+            byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
+            while ((len = elevatorInput.read(buffer)) != -1) {
+                fileOutput.write(buffer, 0, len);
+            }
+            while ((len = floorInput.read(buffer)) != -1) {
+                fileOutput.write(buffer, 0, len);
+            }
+            
+            bigData.close();
+            fileOutput.close();
+            elevatorInput.close();
+            floorInput.close();
+            
+            if (elevatorFile.exists()) {
+                if (elevatorFile.delete()) {
+                    System.out.println("deleted elevator File");
+                };
+            }
+            if (floorFile.exists()) {
+                if (floorFile.delete()) {
+                    System.out.println("deleted floor File");
+                };
+            }
+            
+            System.out.println("The elevator bank was succesfully written to the motha fuckin file");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("FUUUUUUUCKKKKKKKKKKKKKKK");
+        }
+    }
+    
+    public void loadScenario(File file) {
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            DataInputStream dataIn = new DataInputStream(fileIn);
+            
+            //objectIn.writeObject(elevatorBank);
+            
+            long size_elevator = dataIn.readLong();
+            long size_floor = dataIn.readLong();
+            
+            File elevatorFile = new File(file.getParent() + "\\TING_temp_elevator");
+            if (elevatorFile.exists()) {
+                elevatorFile.delete();
+            }
+            
+            File floorFile = new File(file.getParent() + "\\TING_temp_floor");
+            if (floorFile.exists()) {
+                floorFile.delete();
+            }
+            
+            
+            FileOutputStream elevatorFileOutput = new FileOutputStream(elevatorFile);
+            FileOutputStream floorFileOutput = new FileOutputStream(floorFile);
+            
+            byte[] elevatorInputData = new byte[(int)size_elevator];
+            byte[] floorInputData = new byte[(int)size_floor];
+            
+            
+            fileIn.read(elevatorInputData);
+            fileIn.read(floorInputData);
+            
+            elevatorFileOutput.write(elevatorInputData);
+            floorFileOutput.write(floorInputData);
+            
+            dataIn.close();
+            elevatorFileOutput.close();
+            floorFileOutput.close();
+            
+            FileInputStream elevatorFileInputStream = new FileInputStream(elevatorFile);
+            FileInputStream floorFileInputStream = new FileInputStream(floorFile);
+            
+            ObjectInputStream elevatorObjectInputStream = new ObjectInputStream(elevatorFileInputStream);
+            ObjectInputStream floorObjectInputStream = new ObjectInputStream(floorFileInputStream);
+            
+            elevatorBank = (ElevatorBank)elevatorObjectInputStream.readObject();
+            floorBank = (FloorBank)floorObjectInputStream.readObject();
+            
+            elevatorFileInputStream.close();
+            floorFileInputStream.close();
+            elevatorObjectInputStream.close();
+            floorObjectInputStream.close();
+            
+            if (elevatorFile.exists()) {
+                if (elevatorFile.delete()) {
+                    System.out.println("deleted elevator File");
+                };
+            }
+            if (floorFile.exists()) {
+                if (floorFile.delete()) {
+                    System.out.println("deleted floor File");
+                };
+            }
+            
+            System.out.println("elevator size is " + size_elevator + " and floor size is " + size_floor);
+            
+            //elevatorBank = (ElevatorBank)objectIn.readObject();
+            //objectIn.close();
+            System.out.println("The elevator bank was succesfully read from the motha fuckin file");
+            configureGrid2(elevatorBank.ELEVATOR_COUNT, floorBank.FLOOR_MAX);
+            //updateTable();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("FUUUUUUUCKKKKKKKKKKKKKKK");
+        }
+    }
+    
+    /*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"*/
+    /*public void saveScenario(JTable table, File file) {
         try {
             //get information about the table right now
             TableModel model = table.getModel();
@@ -295,8 +495,9 @@ public void saveScenario(JTable table, File file) {
             ex.printStackTrace();
         }
     }//saveScenario
-
-    /*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"*/
+    */
+    
+    /*NEEDS TO BE FIXED ACCORDING FIRST COLUMN "Floor"
     public void loadScenario(JTable table, File file) {
         try {
             //get file the user loaded in and turn it into an inputstream
@@ -333,7 +534,7 @@ public void saveScenario(JTable table, File file) {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }//loadScenario
+    }//loadScenario */
 
 }//class Controller2
 

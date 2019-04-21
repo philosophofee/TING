@@ -1,5 +1,6 @@
 package edu.bristolcc.TING;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 enum ElevatorStatus {
@@ -7,7 +8,7 @@ enum ElevatorStatus {
     IDLE, LOADING, MOVE_UP, MOVE_DOWN, STOPPED;
 }
 
-public class Elevator2 {
+public class Elevator2 implements Serializable {
 
     public volatile int CURRENT_FLOOR;
     public int MAX_FLOOR;

@@ -1,8 +1,9 @@
 package edu.bristolcc.TING;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FloorBank {
+public class FloorBank implements Serializable {
 
     public int FLOOR_MAX;
     private ArrayList<Floor> MY_FLOORS = new ArrayList();

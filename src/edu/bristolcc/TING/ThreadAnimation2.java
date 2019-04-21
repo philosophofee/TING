@@ -1,6 +1,8 @@
 package edu.bristolcc.TING;
 
-public class ThreadAnimation2 implements Runnable {
+import java.io.Serializable;
+
+public class ThreadAnimation2 implements Runnable, Serializable {
 
     private static long ANIMATION_TIMEOUT_MS = 2000; // half second
     private Controller2 controller;

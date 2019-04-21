@@ -1,11 +1,13 @@
 package edu.bristolcc.TING;
 
+import java.io.Serializable;
+
 enum VisitorStatus {
 
     WAITING, BOARDING, RIDING, ARRIVED;
 }
 
-public class Visitor {
+public class Visitor implements Serializable {
 
     public int MY_FLOOR;
     public int DESTINATION;
@@ -16,7 +18,7 @@ public class Visitor {
     public Visitor(int myFloor, int destination) {
         this.MY_FLOOR = myFloor;
         this.DESTINATION = destination;
-        this.MY_NAME = this.toString().replace("edu.bristolcc.TING.Visitor@", "");
+        this.MY_NAME = NameGenerator.randomName(); //this.toString().replace("edu.bristolcc.TING.Visitor@", "");
 
         this.MY_STATUS = VisitorStatus.WAITING;
         //System.out.println("A visitor on floor " + MY_FLOOR + "+1" + " ,wants to go to floor " + DESTINATION + "+1");

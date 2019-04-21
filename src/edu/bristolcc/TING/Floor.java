@@ -1,9 +1,10 @@
 package edu.bristolcc.TING;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Floor {
+public class Floor implements Serializable {
 
     public int FLOOR_LEVEL; //the level that this floor resides in
     public int DESTINATION; //the level the visitor would like to go to
