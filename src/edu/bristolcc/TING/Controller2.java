@@ -261,8 +261,8 @@ public class Controller2 {
             //String daBoys = "";
              for (Visitor visitor : floorBank.getFloorsArray().get(i).getVisitorsArray() ) {
              debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
-             debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 1);
-             debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 2);
+             debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
+             debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
              debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
              debugNum+=1;
              }
@@ -275,12 +275,15 @@ public class Controller2 {
                 //System.out.println(i + ", " + j + ", " + elevatorBank.getElevatorsArray().size());
                 if (elevatorBank.getElevatorsArray().get(j - 1).getMyFloor() == i) {
                     bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
-                    for (Visitor visitor : elevatorBank.getElevatorsArray().get(i).getPassengersArray() ) {
+                    if(elevatorBank.getElevatorsArray().get(j-1).getPassengersArray().size() > 0){//add this if statement for fix
+                    for (Visitor visitor : elevatorBank.getElevatorsArray().get(j-1).getPassengersArray() ) {//change i to j-1 for fix
+                        
                         debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
-                        debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 1);
-                        debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 2);
+                        debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
+                        debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
                         debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
                         debugNum+=1;
+                        }
                     }
                     /*String daBoys = "";
                      for (Visitor visitor : elevatorBank.getElevatorsArray().get(0).getPassengersArray() ) {
