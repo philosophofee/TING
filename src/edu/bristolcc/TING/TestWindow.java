@@ -1,6 +1,7 @@
 package edu.bristolcc.TING;
 
 import java.io.File;
+import javax.swing.table.DefaultTableModel;
 
 public class TestWindow extends javax.swing.JFrame {
 
@@ -1420,6 +1421,10 @@ public class TestWindow extends javax.swing.JFrame {
     private void btnResetTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetTableActionPerformed
         controller.configureGrid(4, 5);
         pnlStats.setScores(null);
+        
+        DefaultTableModel dm = (DefaultTableModel)debugVisitorTable.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
     }//GEN-LAST:event_btnResetTableActionPerformed
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
@@ -1467,7 +1472,6 @@ public class TestWindow extends javax.swing.JFrame {
         Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
 
         bigTable.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-
     }//generateNewTable
 
     public static void main(String args[]) {
