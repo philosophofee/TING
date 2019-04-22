@@ -1422,9 +1422,9 @@ public class TestWindow extends javax.swing.JFrame {
         controller.configureGrid(4, 5);
         pnlStats.setScores(null);
         
-        DefaultTableModel dm = (DefaultTableModel)debugVisitorTable.getModel();
+        /*DefaultTableModel dm = (DefaultTableModel)debugVisitorTable.getModel();
         dm.getDataVector().removeAllElements();
-        dm.fireTableDataChanged();
+        dm.fireTableDataChanged();*/
     }//GEN-LAST:event_btnResetTableActionPerformed
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
