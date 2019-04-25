@@ -1,7 +1,6 @@
 package edu.bristolcc.TING;
 
 import java.io.File;
-import javax.swing.table.DefaultTableModel;
 
 public class TestWindow extends javax.swing.JFrame {
 
@@ -1408,7 +1407,6 @@ public class TestWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnLoadScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScenarioActionPerformed
-        controller.pauseAnimation();
         controller.resetAnimation();
         FilePicker picker = new FilePicker(null);
         File toLoad = picker.pickFile(".esf", "TING Elevator Scenario File (*.esf)", false);
@@ -1419,12 +1417,9 @@ public class TestWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoadScenarioActionPerformed
 
     private void btnResetTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetTableActionPerformed
+        controller.resetAnimation();
         controller.configureGrid(4, 5);
-        pnlStats.setScores(null);
-        
-        /*DefaultTableModel dm = (DefaultTableModel)debugVisitorTable.getModel();
-        dm.getDataVector().removeAllElements();
-        dm.fireTableDataChanged();*/
+        //pnlStats.setScores(null);
     }//GEN-LAST:event_btnResetTableActionPerformed
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
@@ -1433,7 +1428,7 @@ public class TestWindow extends javax.swing.JFrame {
             int floors = Integer.parseInt(txtFloors.getText());
 
             controller.configureGrid(elevators, floors);
-            pnlStats.setScores(null);
+            //pnlStats.setScores(null);
             
         } catch (NumberFormatException ex) {
             controller.pauseAnimation();
@@ -1455,25 +1450,7 @@ public class TestWindow extends javax.swing.JFrame {
         //print all passengers in all elevators and their status
         controller.elevatorTick();
     }//GEN-LAST:event_btnShowPassengersActionPerformed
-
-    public void generateNewTable(int elevators, int floors) {
-
-        int columnCount = elevators + 1;
-
-        // configure column names
-        String[] columnNames = new String[columnCount];
-        char[] dummy = {'A'};
-        columnNames[0] = "Floor";
-        for (int idx = 1; idx < columnCount; ++idx) {
-            dummy[0] = (char) (idx - 1 + 'A');
-            columnNames[idx] = new String(dummy);
-        }
-        // populate 2-dimensional array of data
-        Object[][] tableContent = new Object[floors/*rows*/][columnCount/*columns*/];
-
-        bigTable.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
-    }//generateNewTable
-
+    
     public static void main(String args[]) {
         Controller2 controller = new Controller2();
         java.awt.EventQueue.invokeLater(new Runnable() {

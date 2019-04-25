@@ -1,22 +1,94 @@
 package edu.bristolcc.TING;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Statistics extends JPanel implements Serializable {
 
-    private final int padding = 25;
+    private JFrame frame;
+    
+    private ArrayList<Integer> yCoords;
+    private int startX = 100;
+    private int startY = 100;
+    private int endX = 400;
+    private int endY = 400;
+    private int unitX = (endX - startX) / 10;
+    private int unitY = (endY - startY) / 10;
+    private int prevX = startX;
+    private int prevY = endY;
+
+    public ArrayList<Integer> elevator_floors = new ArrayList<>();
+    //ArrayList<ArrayList<Integer>> elevator_floors = new ArrayList<ArrayList<Integer>>();
+    //2-D Array Idea
+    //int elevator;
+    //int elevator_floors;
+    //ArrayList[][] elevator_stats = new ArrayList[elevator][elevator_floors];
+    
+    public void updateElevatorInStats(int elevator, int floor){
+        elevator_floors.add(floor);
+        //elevator_floors.get(elevator).add(floor);
+        createAndShowGui();
+    }//updateElevatorInStats
+    
+    public void createAndShowGui() {
+
+        Statistics drawer = new Statistics(elevator_floors);
+
+        frame.add(drawer);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }//createAndShowGui
+
+    public Statistics(){
+        frame = new JFrame(getClass().getSimpleName());
+    }//Statistics
+    
+    public Statistics(ArrayList<Integer> yCoords) {
+        this.yCoords = yCoords;
+    }//Statistics
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        //draw in the following loop the floors-axis horiztonal grid so it's visible
+        g2d.setColor(Color.GRAY);
+        for (int i = startY, j = 10; i <= endY; i += unitY, --j) {
+
+            g2d.drawLine(startX, i, endX, i);
+            
+            g2d.drawString("F" + j, startX  - 35, i);
+            
+        }
+
+        //draw the x and y axis here
+        g2d.setColor(Color.BLACK);
+        g2d.drawLine(startX, startY - 25, startX, endY);
+        g2d.drawLine(startX, endY, endX + 25, endY);
+        g2d.drawString("Floor", startX  - 35, startY - 20);
+        g2d.drawString("Time", endX, endY + 20);
+
+        //draw each of our coords in blue color
+        g2d.setColor(Color.BLUE);
+        for (int y : yCoords) {
+            g2d.drawLine(prevX, prevY, prevX += unitX, prevY = endY - (y * unitY));
+            
+        }
+    }//paintComponent
+
+    public Dimension getPreferredSize() {
+        return new Dimension(endX + 100, endY + 100);
+    }//getPreferredSize
+    
+    /*private final int padding = 25;
     private final int labelPadding = 25;
     private final Color lineColor = new Color(230, 102, 44, 180);
     private final Color pointColor = new Color(100, 100, 100, 180);
@@ -143,6 +215,6 @@ public class Statistics extends JPanel implements Serializable {
 
     public List<Double> getScores() {
         return scores;
-    }//getScores
+    }//getScores*/
 
 }//Class Statistics

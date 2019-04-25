@@ -17,11 +17,10 @@ import javax.swing.table.DefaultTableModel;
 public class Controller2 {
 
     public boolean simulationStatus;
-
-    int VERSION_NUMBER = 1;
     
     FloorBank floorBank = new FloorBank();
     ElevatorBank elevatorBank = new ElevatorBank();
+    Statistics stats = new Statistics();
     
     private TestWindow window;
     private JTable bigTable;
@@ -47,7 +46,7 @@ public class Controller2 {
     
     public void instantiateFloor() {
         floorBank.instantiate(bigTable.getModel().getRowCount());
-    }
+    }//instantiateFloor
 
     public void instantiateElevator() {
         elevatorBank.instantiate(bigTable.getModel().getColumnCount(), bigTable.getModel().getRowCount() - 1);
@@ -55,7 +54,7 @@ public class Controller2 {
         for (int i = 0; i < elevatorBank.getElevatorsArray().size(); ++i) {
             System.out.println("Elevator " + elevatorBank.getElevatorsArray().get(i).MY_IDENTIFIER + " (" + elevatorBank.getElevatorsArray().get(i).getPassengerCount() + "): Floor " + elevatorBank.getElevatorsArray().get(i).CURRENT_FLOOR + ". State: " + elevatorBank.getElevatorsArray().get(i).MY_STATUS);
         }
-    }
+    }//instantiateElevator
 
     public void startAnimation() {
         simulationStatus = true;
@@ -88,15 +87,15 @@ public class Controller2 {
 
     public int giveCount() {
         return animationThread.getCount();
-    }
+    }//giveCount
 
     public void elevatorTick() {
         elevatorBank.tick();
-    }
+    }//elevatorTick
 
     public void floorTick() {
         floorBank.tick();
-    }
+    }//floorTick
 
     public void simulation() {
         //move visitor onto elevator if elevator is IDLE meaning ground floor and change state to MOVE_UP
@@ -121,6 +120,7 @@ public class Controller2 {
                 if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_UP)) {
                     int MOVE_UP = -1;
                     elevatorBank.moveElevator(e, MOVE_UP);
+                    stats.updateElevatorInStats(e, floorBank.getFloorsArray().size() - elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR);
                     updateTable();
                 }
             }
@@ -163,6 +163,8 @@ public class Controller2 {
                     if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
                         int MOVE_DOWN = 1;
                         elevatorBank.moveElevator(e, MOVE_DOWN);
+                        
+                        //stats.updateElevatorInStats(e, elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR);
                         updateTable();
                         if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
                             elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.IDLE);
@@ -182,7 +184,7 @@ public class Controller2 {
                 }
             }
         }
-    }
+    }//simulation
     
     public void addVisitors() {
         //generate random amount of visitors 0 through 5 that come into ground floor
@@ -234,19 +236,35 @@ public class Controller2 {
                 floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
             }
             floorBank.getFloorsArray().clear();
-            window.generateNewTable(elevators, floors);
+            generateNewTable(elevators, floors);
             floorBank.instantiate(floors);
             elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
             resetAnimation();
             updateTable();
     }//configureGrid
-
-    public void configureGrid2(int elevators, int floors){
-            window.generateNewTable(elevators, floors);
-            floorBank.instantiate(floors);
-            elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
+    
+    public void configureGridFromFile(int elevators, int floors){
+            generateNewTable(elevators, floors);
             updateTable();
-    }//configureGrid
+    }//configureGridFromFile
+    
+    public void generateNewTable(int elevators, int floors) {
+
+        int columnCount = elevators;
+
+        // configure column names
+        String[] columnNames = new String[columnCount+1];
+        char[] dummy = {'A'};
+        columnNames[0] = "Floor";
+        for (int idx = 1; idx < columnCount+1; ++idx) {
+            dummy[0] = (char) (idx - 1 + 'A');
+            columnNames[idx] = new String(dummy);
+        }
+        // populate 2-dimensional array of data
+        Object[][] tableContent = new Object[floors][columnCount];
+
+        bigTable.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
+    }//generateNewTable
     
     public void updateTable() {
         
@@ -319,9 +337,6 @@ public class Controller2 {
             ObjectOutputStream elevatorOut = new ObjectOutputStream(elevatorFileOut);
             ObjectOutputStream floorOut = new ObjectOutputStream(floorFileOut);
 
-            
-            //objectOut.useProtocolVersion(VERSION_NUMBER);
-
             elevatorOut.writeObject(elevatorBank);
             size_elevator = elevatorFile.length();
             System.out.println("size of elevator section should be " + size_elevator + " bytes");
@@ -373,15 +388,13 @@ public class Controller2 {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }//saveScenario
     
     public void loadScenario(File file) {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             DataInputStream dataIn = new DataInputStream(fileIn);
-            
-            //objectIn.writeObject(elevatorBank);
-            
+                        
             long size_elevator = dataIn.readLong();
             long size_floor = dataIn.readLong();
             
@@ -440,14 +453,12 @@ public class Controller2 {
             
             System.out.println("elevator size is " + size_elevator + " and floor size is " + size_floor);
             
-            //elevatorBank = (ElevatorBank)objectIn.readObject();
-            //objectIn.close();
             System.out.println("The elevator and floor banks were succesfully read from file");
-            configureGrid2(elevatorBank.ELEVATOR_COUNT, floorBank.FLOOR_MAX);
-            //updateTable();
+            configureGridFromFile(elevatorBank.ELEVATOR_COUNT, floorBank.FLOOR_MAX);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }//loadScenario
+    
 }//class Controller2
