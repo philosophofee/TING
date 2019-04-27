@@ -14,6 +14,7 @@ public class TestWindow extends javax.swing.JFrame {
         this.controller.setDebugTable(debugVisitorTable);
         this.controller.instantiateFloor();
         this.controller.instantiateElevator();
+        pnlStats.setNumberOfFloors(bigTable.getRowCount());
         controller.updateTable();
     }
 
@@ -21,7 +22,7 @@ public class TestWindow extends javax.swing.JFrame {
 
         /*Add random number of visitors to ground floor*/
         controller.addVisitors();
-        
+
         //print beginning of tick for each tick
         System.out.println("\nTICK " + controller.giveCount() + "\n----------");
 
@@ -33,7 +34,7 @@ public class TestWindow extends javax.swing.JFrame {
 
         //run all simulation code
         controller.simulation();
-        
+
     }//update
 
     @SuppressWarnings("unchecked")
@@ -1419,7 +1420,8 @@ public class TestWindow extends javax.swing.JFrame {
     private void btnResetTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetTableActionPerformed
         controller.resetAnimation();
         controller.configureGrid(4, 5);
-        //pnlStats.setScores(null);
+
+        pnlStats.setNumberOfFloors(5);
     }//GEN-LAST:event_btnResetTableActionPerformed
 
     private void btnConfigureGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigureGridActionPerformed
@@ -1428,8 +1430,8 @@ public class TestWindow extends javax.swing.JFrame {
             int floors = Integer.parseInt(txtFloors.getText());
 
             controller.configureGrid(elevators, floors);
-            //pnlStats.setScores(null);
-            
+
+            pnlStats.setNumberOfFloors(floors);
         } catch (NumberFormatException ex) {
             controller.pauseAnimation();
             txtFloors.setText("NaN");
@@ -1450,7 +1452,7 @@ public class TestWindow extends javax.swing.JFrame {
         //print all passengers in all elevators and their status
         controller.elevatorTick();
     }//GEN-LAST:event_btnShowPassengersActionPerformed
-    
+
     public static void main(String args[]) {
         Controller2 controller = new Controller2();
         java.awt.EventQueue.invokeLater(new Runnable() {

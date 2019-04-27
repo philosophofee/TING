@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import static java.lang.Thread.State.NEW;
 import static java.lang.Thread.State.TIMED_WAITING;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -98,6 +99,7 @@ public class Controller2 {
     }//floorTick
 
     public void simulation() {
+        stats.setCounter(animationThread.getCount());
         //move visitor onto elevator if elevator is IDLE meaning ground floor and change state to MOVE_UP
         for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
             if (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.IDLE) {
@@ -120,7 +122,7 @@ public class Controller2 {
                 if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_UP)) {
                     int MOVE_UP = -1;
                     elevatorBank.moveElevator(e, MOVE_UP);
-                    stats.updateElevatorInStats(e, floorBank.getFloorsArray().size() - elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR);
+                    //stats.elevator_floor.add((double)1);
                     updateTable();
                 }
             }
@@ -250,13 +252,14 @@ public class Controller2 {
     
     public void generateNewTable(int elevators, int floors) {
 
+        //int columnCount = elevators + 1;
         int columnCount = elevators;
 
         // configure column names
-        String[] columnNames = new String[columnCount+1];
+        String[] columnNames = new String[columnCount+1/*columnCount*/];
         char[] dummy = {'A'};
         columnNames[0] = "Floor";
-        for (int idx = 1; idx < columnCount+1; ++idx) {
+        for (int idx = 1; idx < columnCount+1/*columnCount*/; ++idx) {
             dummy[0] = (char) (idx - 1 + 'A');
             columnNames[idx] = new String(dummy);
         }
