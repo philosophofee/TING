@@ -16,6 +16,7 @@ public class TestWindow extends javax.swing.JFrame {
         this.controller.instantiateElevator();
         pnlStats.setNumberOfFloors(bigTable.getRowCount());
         controller.updateTable();
+        pnlStats.setCounter(controller.giveCount());
     }
 
     public void update() {
@@ -34,6 +35,12 @@ public class TestWindow extends javax.swing.JFrame {
 
         //run all simulation code
         controller.simulation();
+        
+        //give counter to stats panel
+        pnlStats.setCounter(controller.giveCount());
+        
+        //update Stats panel every tick
+        //pnlStats.repaint();
 
     }//update
 

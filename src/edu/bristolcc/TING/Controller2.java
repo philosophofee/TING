@@ -10,7 +10,6 @@ import java.io.ObjectOutputStream;
 import static java.lang.Thread.State.NEW;
 import static java.lang.Thread.State.TIMED_WAITING;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -18,11 +17,11 @@ import javax.swing.table.DefaultTableModel;
 public class Controller2 {
 
     public boolean simulationStatus;
-    
+
     FloorBank floorBank = new FloorBank();
     ElevatorBank elevatorBank = new ElevatorBank();
     Statistics stats = new Statistics();
-    
+
     private TestWindow window;
     private JTable bigTable;
     private JTable debugTable;
@@ -36,15 +35,15 @@ public class Controller2 {
     public TestWindow getWindow() {
         return window;
     }//getWindow
-    
+
     public void setTable(JTable bigTable) {
         this.bigTable = bigTable;
     }//setTable
-    
+
     public void setDebugTable(JTable debugTable) {
         this.debugTable = debugTable;
     }//setDebugTable
-    
+
     public void instantiateFloor() {
         floorBank.instantiate(bigTable.getModel().getRowCount());
     }//instantiateFloor
@@ -75,9 +74,9 @@ public class Controller2 {
         simulationStatus = false;
         th.suspend();
         animationThread.setCount(0);
-        
+
     }//resetAnimation
-    
+
     public void animate() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -99,7 +98,7 @@ public class Controller2 {
     }//floorTick
 
     public void simulation() {
-        stats.setCounter(animationThread.getCount());
+
         //move visitor onto elevator if elevator is IDLE meaning ground floor and change state to MOVE_UP
         for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
             if (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.IDLE) {
@@ -122,11 +121,11 @@ public class Controller2 {
                 if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_UP)) {
                     int MOVE_UP = -1;
                     elevatorBank.moveElevator(e, MOVE_UP);
-                    //stats.elevator_floor.add((double)1);
                     updateTable();
                 }
             }
         }
+
 
         //move passenger off of elevator and if passenger count equals 0 change state to MOVE_DOWN
         for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
@@ -142,13 +141,13 @@ public class Controller2 {
                         isStopped = true;
                         elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
                         //if (elevatorBank.getElevatorsArray().get(e).getPassengersArray().size() > 0) {
-                            //if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR > elevatorBank.getElevatorsArray().get(e).getPassengersArray().get(k).DESTINATION) {
-                                //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_UP);
-                            //} else if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR < elevatorBank.getElevatorsArray().get(e).getPassengersArray().get(k).DESTINATION) {
-                                //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
-                            //} else {
-                                //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
-                            //}
+                        //if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR > elevatorBank.getElevatorsArray().get(e).getPassengersArray().get(k).DESTINATION) {
+                        //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_UP);
+                        //} else if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR < elevatorBank.getElevatorsArray().get(e).getPassengersArray().get(k).DESTINATION) {
+                        //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
+                        //} else {
+                        //elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.MOVE_DOWN);
+                        //}
                         //}
                     }
                     if (isStopped == false) {
@@ -165,13 +164,12 @@ public class Controller2 {
                     if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR != floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
                         int MOVE_DOWN = 1;
                         elevatorBank.moveElevator(e, MOVE_DOWN);
-                        
-                        //stats.updateElevatorInStats(e, elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR);
                         updateTable();
                         if (elevatorBank.getElevatorsArray().get(e).CURRENT_FLOOR == floorBank.getFloorsArray().get(bigTable.getRowCount() - 1).FLOOR_LEVEL) {
                             elevatorBank.getElevatorsArray().get(e).setMY_STATUS(ElevatorStatus.IDLE);
                         }
                     }
+
                 }
             } else { //THIS IS A TEMPORARY FIX FOR ELEVATOR GETTING STUCK AT TOP FLOOR WITH PASSENGER STILL ON IT
                 if ((elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) && (elevatorBank.getElevatorsArray().get(e).MY_STATUS == ElevatorStatus.MOVE_DOWN) && (elevatorBank.getElevatorsArray().get(e).getPassengerCount() > 0)) {
@@ -186,8 +184,11 @@ public class Controller2 {
                 }
             }
         }
+        System.out.println("ArrayList of floors Elevator 0 visited over time: ");
+        stats.printElevators(elevatorBank.getElevatorsArray().get(0).CURRENT_FLOOR);
+
     }//simulation
-    
+
     public void addVisitors() {
         //generate random amount of visitors 0 through 5 that come into ground floor
         Random rand = new Random();
@@ -195,14 +196,14 @@ public class Controller2 {
 
         for (int i = 0; i < random_integer; ++i) {
             floorBank.getFloorsArray().get(bigTable.getModel().getRowCount() - 1).addVisitorToFloor(bigTable.getModel().getRowCount() - 1);
-            DefaultTableModel model = (DefaultTableModel) debugTable.getModel(); 
+            DefaultTableModel model = (DefaultTableModel) debugTable.getModel();
             model.addRow(new Object[]{"", "", "", ""});
             model.addRow(new Object[]{"", "", "", ""});
         }
-       
+
         updateTable();
     }//addVisitors
-    
+
     public void moveOnToElevator(int f, int v, int e) {
         if ((floorBank.getFloorsArray().get(f).getVisitorCount() > 0) && (elevatorBank.getElevatorsArray().get(e).getPassengerCount() < elevatorBank.getElevatorsArray().get(e).MY_CAPACITY)) {
             if (floorBank.getFloorsArray().get(f).getVisitorsArray().get(v).MY_FLOOR != floorBank.getFloorsArray().get(f).getVisitorsArray().get(v).DESTINATION) {
@@ -228,38 +229,38 @@ public class Controller2 {
             }
         }
     }//moveOffOfElevator
-    
-    public void configureGrid(int elevators, int floors){
+
+    public void configureGrid(int elevators, int floors) {
         for (int e = 0; e < elevatorBank.getElevatorsArray().size(); ++e) {
-                elevatorBank.getElevatorsArray().get(e).getPassengersArray().clear();
-            }
-            elevatorBank.getElevatorsArray().clear();
-            for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
-                floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
-            }
-            floorBank.getFloorsArray().clear();
-            generateNewTable(elevators, floors);
-            floorBank.instantiate(floors);
-            elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
-            resetAnimation();
-            updateTable();
+            elevatorBank.getElevatorsArray().get(e).getPassengersArray().clear();
+        }
+        elevatorBank.getElevatorsArray().clear();
+        for (int i = 0; i < bigTable.getModel().getRowCount(); ++i) {
+            floorBank.getFloorsArray().get(i).getVisitorsArray().clear();
+        }
+        floorBank.getFloorsArray().clear();
+        generateNewTable(elevators, floors);
+        floorBank.instantiate(floors);
+        elevatorBank.instantiate(elevators, bigTable.getModel().getRowCount() - 1);
+        resetAnimation();
+        updateTable();
     }//configureGrid
-    
-    public void configureGridFromFile(int elevators, int floors){
-            generateNewTable(elevators, floors);
-            updateTable();
+
+    public void configureGridFromFile(int elevators, int floors) {
+        generateNewTable(elevators, floors);
+        updateTable();
     }//configureGridFromFile
-    
+
     public void generateNewTable(int elevators, int floors) {
 
         //int columnCount = elevators + 1;
         int columnCount = elevators;
 
         // configure column names
-        String[] columnNames = new String[columnCount+1/*columnCount*/];
+        String[] columnNames = new String[columnCount + 1/*columnCount*/];
         char[] dummy = {'A'};
         columnNames[0] = "Floor";
-        for (int idx = 1; idx < columnCount+1/*columnCount*/; ++idx) {
+        for (int idx = 1; idx < columnCount + 1/*columnCount*/; ++idx) {
             dummy[0] = (char) (idx - 1 + 'A');
             columnNames[idx] = new String(dummy);
         }
@@ -268,21 +269,21 @@ public class Controller2 {
 
         bigTable.setModel(new javax.swing.table.DefaultTableModel(tableContent, columnNames));
     }//generateNewTable
-    
+
     public void updateTable() {
-        
+
         int debugNum = 0;
         for (int i = 0; i < bigTable.getModel().getRowCount(); i++) {
             bigTable.getModel().setValueAt(floorBank.getFloorsArray().get(i).getVisitorCount(), i, 0);
             //String daBoys = "";
-             for (Visitor visitor : floorBank.getFloorsArray().get(i).getVisitorsArray() ) {
-             debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
-             debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
-             debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
-             debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
-             debugNum+=1;
-             }
-             //bigTable.getModel().setValueAt(daBoys, i, 0);*/
+            for (Visitor visitor : floorBank.getFloorsArray().get(i).getVisitorsArray()) {
+                debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
+                debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
+                debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
+                debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
+                debugNum += 1;
+            }
+            //bigTable.getModel().setValueAt(daBoys, i, 0);*/
             //System.out.println("floor " + i + " contains " + floorBank.getFloorsArray().get(i).getVisitorCount() + " visitors");
         }
 
@@ -291,14 +292,14 @@ public class Controller2 {
                 //System.out.println(i + ", " + j + ", " + elevatorBank.getElevatorsArray().size());
                 if (elevatorBank.getElevatorsArray().get(j - 1).getMyFloor() == i) {
                     bigTable.getModel().setValueAt(elevatorBank.getElevatorsArray().get(j - 1).getPassengerCount(), i, j);
-                    if(elevatorBank.getElevatorsArray().get(j-1).getPassengersArray().size() > 0){//add this if statement for fix
-                    for (Visitor visitor : elevatorBank.getElevatorsArray().get(j-1).getPassengersArray() ) {//change i to j-1 for fix
-                        
-                        debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
-                        debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
-                        debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
-                        debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
-                        debugNum+=1;
+                    if (elevatorBank.getElevatorsArray().get(j - 1).getPassengersArray().size() > 0) {//add this if statement for fix
+                        for (Visitor visitor : elevatorBank.getElevatorsArray().get(j - 1).getPassengersArray()) {//change i to j-1 for fix
+
+                            debugTable.getModel().setValueAt(visitor.MY_NAME, debugNum, 0);
+                            debugTable.getModel().setValueAt(visitor.DESTINATION, debugNum, 1);
+                            debugTable.getModel().setValueAt(visitor.MY_FLOOR, debugNum, 2);
+                            debugTable.getModel().setValueAt(visitor.MY_STATUS, debugNum, 3);
+                            debugNum += 1;
                         }
                     }
                     /*String daBoys = "";
@@ -318,50 +319,50 @@ public class Controller2 {
 
             long size_elevator;
             long size_floor;
-            
+
             //Create temp files and hide them from the user because we're evil
             File elevatorFile = new File(file.getParent() + "\\TING_temp_elevator");
             if (elevatorFile.exists()) {
                 elevatorFile.delete();
             }
-            
+
             File floorFile = new File(file.getParent() + "\\TING_temp_floor");
             if (floorFile.exists()) {
                 floorFile.delete();
             }
-            
+
             //Create output file streams for both of theses sub files
             FileOutputStream elevatorFileOut = new FileOutputStream(elevatorFile);
             FileOutputStream floorFileOut = new FileOutputStream(floorFile);
 
             Files.setAttribute(elevatorFile.toPath(), "dos:hidden", true);
             Files.setAttribute(floorFile.toPath(), "dos:hidden", true);
-            
+
             ObjectOutputStream elevatorOut = new ObjectOutputStream(elevatorFileOut);
             ObjectOutputStream floorOut = new ObjectOutputStream(floorFileOut);
 
             elevatorOut.writeObject(elevatorBank);
             size_elevator = elevatorFile.length();
             System.out.println("size of elevator section should be " + size_elevator + " bytes");
-            
+
             floorOut.writeObject(floorBank);
             size_floor = floorFile.length();
             System.out.println("size of floor section should be " + size_floor + " bytes");
-            
+
             elevatorOut.close();
             floorOut.close();
             elevatorFileOut.close();
             floorFileOut.close();
-            
+
             FileInputStream elevatorInput = new FileInputStream(elevatorFile);
             FileInputStream floorInput = new FileInputStream(floorFile);
             FileOutputStream fileOutput = new FileOutputStream(file);
             DataOutputStream bigData = new DataOutputStream(fileOutput);
             bigData.writeLong(size_elevator);
             bigData.writeLong(size_floor);
-            
+
             int len = 0;
-            
+
             byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
             while ((len = elevatorInput.read(buffer)) != -1) {
                 fileOutput.write(buffer, 0, len);
@@ -369,12 +370,12 @@ public class Controller2 {
             while ((len = floorInput.read(buffer)) != -1) {
                 fileOutput.write(buffer, 0, len);
             }
-            
+
             bigData.close();
             fileOutput.close();
             elevatorInput.close();
             floorInput.close();
-            
+
             if (elevatorFile.exists()) {
                 if (elevatorFile.delete()) {
                     System.out.println("deleted elevator File");
@@ -385,64 +386,61 @@ public class Controller2 {
                     System.out.println("deleted floor File");
                 };
             }
-            
+
             System.out.println("The elevator and floor banks were succesfully written to file");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//saveScenario
-    
+
     public void loadScenario(File file) {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             DataInputStream dataIn = new DataInputStream(fileIn);
-                        
+
             long size_elevator = dataIn.readLong();
             long size_floor = dataIn.readLong();
-            
+
             File elevatorFile = new File(file.getParent() + "\\TING_temp_elevator");
             if (elevatorFile.exists()) {
                 elevatorFile.delete();
             }
-            
+
             File floorFile = new File(file.getParent() + "\\TING_temp_floor");
             if (floorFile.exists()) {
                 floorFile.delete();
             }
-            
-            
+
             FileOutputStream elevatorFileOutput = new FileOutputStream(elevatorFile);
             FileOutputStream floorFileOutput = new FileOutputStream(floorFile);
-            
-            byte[] elevatorInputData = new byte[(int)size_elevator];
-            byte[] floorInputData = new byte[(int)size_floor];
-            
-            
+
+            byte[] elevatorInputData = new byte[(int) size_elevator];
+            byte[] floorInputData = new byte[(int) size_floor];
+
             fileIn.read(elevatorInputData);
             fileIn.read(floorInputData);
-            
+
             elevatorFileOutput.write(elevatorInputData);
             floorFileOutput.write(floorInputData);
-            
+
             dataIn.close();
             elevatorFileOutput.close();
             floorFileOutput.close();
-            
+
             FileInputStream elevatorFileInputStream = new FileInputStream(elevatorFile);
             FileInputStream floorFileInputStream = new FileInputStream(floorFile);
-            
+
             ObjectInputStream elevatorObjectInputStream = new ObjectInputStream(elevatorFileInputStream);
             ObjectInputStream floorObjectInputStream = new ObjectInputStream(floorFileInputStream);
-            
-            elevatorBank = (ElevatorBank)elevatorObjectInputStream.readObject();
-            floorBank = (FloorBank)floorObjectInputStream.readObject();
-            
+
+            elevatorBank = (ElevatorBank) elevatorObjectInputStream.readObject();
+            floorBank = (FloorBank) floorObjectInputStream.readObject();
+
             elevatorFileInputStream.close();
             floorFileInputStream.close();
             elevatorObjectInputStream.close();
             floorObjectInputStream.close();
-            
+
             if (elevatorFile.exists()) {
                 if (elevatorFile.delete()) {
                     System.out.println("deleted elevator File");
@@ -453,15 +451,14 @@ public class Controller2 {
                     System.out.println("deleted floor File");
                 };
             }
-            
+
             System.out.println("elevator size is " + size_elevator + " and floor size is " + size_floor);
-            
+
             System.out.println("The elevator and floor banks were succesfully read from file");
             configureGridFromFile(elevatorBank.ELEVATOR_COUNT, floorBank.FLOOR_MAX);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//loadScenario
-    
+
 }//class Controller2
